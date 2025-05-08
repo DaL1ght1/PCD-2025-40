@@ -1,0 +1,243 @@
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 5rem 0 3rem;
+  text-align: center;
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .page-description {
+    font-size: 1.25rem;
+    opacity: 0.9;
+  }
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.contact-section {
+  padding: 5rem 0;
+  background-color: var(--bg-color);
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+
+    @media (min-width: 992px) {
+      grid-template-columns: 3fr 2fr;
+    }
+  }
+
+  .contact-form-container {
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 2.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+
+    .contact-form {
+      .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+          display: block;
+          font-size: 0.9rem;
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 1px solid var(--border-color);
+          border-radius: 0.375rem;
+          font-size: 1rem;
+          outline: none;
+          transition: border-color 0.2s ease;
+
+          &:focus {
+            border-color: var(--primary-color);
+          }
+        }
+
+        textarea {
+          resize: vertical;
+        }
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+
+        @media (min-width: 640px) {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+
+        &.btn-primary {
+          background-color: var(--primary-color);
+          color: white;
+
+          &:hover {
+            background-color: var(--primary-dark);
+          }
+        }
+      }
+    }
+  }
+
+  .contact-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+
+    .contact-methods {
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+      }
+
+      .contact-method {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .method-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background-color: var(--primary-lighter);
+          flex-shrink: 0;
+
+          i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+          }
+        }
+
+        .method-details {
+          h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+          }
+
+          p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+          }
+
+          a {
+            color: var(--primary-color);
+            font-weight: 500;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+
+    .social-links {
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+      }
+
+      .social-icons {
+        display: flex;
+        gap: 1rem;
+
+        .social-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: var(--primary-lighter);
+          color: var(--primary-color);
+          transition: all 0.2s ease;
+
+          i {
+            font-size: 1.25rem;
+          }
+
+          &:hover {
+            background-color: var(--primary-color);
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+.offices-section {
+  padding: 5rem 0;
+  background-color: white;
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .offices-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2.5rem;}
+}

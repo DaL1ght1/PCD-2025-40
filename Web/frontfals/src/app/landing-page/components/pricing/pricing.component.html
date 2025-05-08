@@ -1,0 +1,110 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">Transparent Pricing</h1>
+      <p class="page-description">
+        Choose the plan that fits your image verification needs
+      </p>
+    </div>
+  </header>
+
+  <section class="pricing-section">
+    <div class="container">
+      <div class="pricing-toggle">
+        <span>Monthly</span>
+        <label class="switch">
+          <input type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <span>Annual <span class="discount">Save 20%</span></span>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card" *ngFor="let plan of plans" [class.highlighted]="plan.highlight">
+          <div class="card-header">
+            <h2 class="plan-name">{{plan.name}}</h2>
+            <div class="plan-price">
+              <span class="price">{{plan.price}}</span>
+              <span class="period">{{plan.period}}</span>
+            </div>
+            <p class="plan-description">{{plan.description}}</p>
+          </div>
+          <div class="card-body">
+            <ul class="feature-list">
+              <li *ngFor="let feature of plan.features">
+                <i class="material-icons">check_circle</i>
+                <span>{{feature}}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <a [routerLink]="plan.name === 'Enterprise' ? '/contact' : '/register'" class="btn btn-primary btn-full">{{plan.cta}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="enterprise-section">
+    <div class="container">
+      <div class="enterprise-content">
+        <div class="enterprise-info">
+          <h2>Need a custom solution?</h2>
+          <p>
+            Our Enterprise plan can be tailored to your organization's specific needs, including custom integrations, dedicated support, and specialized features for high-volume users.
+          </p>
+          <ul class="enterprise-features">
+            <li>
+              <i class="material-icons">security</i>
+              <div>
+                <h3>Enhanced Security</h3>
+                <p>Additional security features including SSO, custom data retention policies, and dedicated infrastructure.</p>
+              </div>
+            </li>
+            <li>
+              <i class="material-icons">integration_instructions</i>
+              <div>
+                <h3>Custom Integrations</h3>
+                <p>Seamless integration with your existing case management systems, evidence management platforms, and workflows.</p>
+              </div>
+            </li>
+            <li>
+              <i class="material-icons">support_agent</i>
+              <div>
+                <h3>Dedicated Support</h3>
+                <p>Assigned account manager, priority support, and regular check-ins to ensure your success.</p>
+              </div>
+            </li>
+          </ul>
+          <a routerLink="/contact" class="btn btn-primary">Contact Our Sales Team</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-grid">
+        <div class="faq-item" *ngFor="let faq of faqs">
+          <h3 class="faq-question">{{faq.question}}</h3>
+          <p class="faq-answer">{{faq.answer}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="guarantee-section">
+    <div class="container">
+      <div class="guarantee-content">
+        <div class="guarantee-icon">
+          <i class="material-icons">verified</i>
+        </div>
+        <h2>100% Satisfaction Guarantee</h2>
+        <p>
+          We're confident in the quality of our service. If you're not completely satisfied within your first 30 days, we'll refund your subscription fee.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>

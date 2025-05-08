@@ -1,0 +1,81 @@
+spring:
+  data:
+    mongodb:
+      database: Images
+      username: admin
+      password: admin
+      host: localhost
+      port: 27017
+      authentication-database: admin
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+server:
+  port: 8051
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  tomcat:
+    max-http-form-post-size: 100MB
+    max-swallow-size: -1
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# Service-to-service authentication
+service:
+  auth:
+    token: ${SERVICE_AUTH_TOKEN:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzeXN0ZW1Ac2VydmljZS5jb20iLCJyb2xlcyI6WyJST0xFX1NZU1RFTSJdLCJpYXQiOjE2MTYxNjI4MDAsImV4cCI6MjUzMzY5MjgwMH0.example-token}
+
+services:
+  image-management:
+    url: http://imagemanagement-service:8050
+
+python:
+  executable: python
+  timeout: 100
+  script:
+    path: classpath:python/detect_falsification.py
+
+model:
+  pytorch:
+    path: classpath:models/falsification_detector.pth
+  version: 1.0.0
+
+analysis:
+  service:
+    user-id: ANALYSIS_SERVICE
+    user-role: SYSTEM
+  model:
+    default:
+      arch: MobileNetV3_Large
+      height: 224
+      width: 224
+      dense: 768
+      dropout: 0.45
+      version: "1.0.0-mobilenetv3l-dense768"
+
+shap:
+  background:
+    dir: D:\Work-PCD\falsiified\services\imageAnalysis-service\src\main\resources\models\Shap\real
+
+
+
+logging:
+  level:
+    com:
+      pcd:
+        imageanalysis: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
+
+app:
+  kafka:
+    topics:
+      analysis-completed: analysis-completed-topic

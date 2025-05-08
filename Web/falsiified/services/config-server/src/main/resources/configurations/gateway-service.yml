@@ -1,0 +1,67 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: user-service
+          uri: lb:http://USER-SERVICE
+          predicates:
+            - Path=/api/v1/auth/**,/api/v1/user/**,/api/v1/admin/**,/api/v1/expert/**,/api/v1/investigator/**,/api/v1/lawyer/**,/api/v1/judge/**
+
+        - id: imageAnalysis-service
+          uri: lb:http://IMAGEANALYSIS-SERVICE
+          predicates:
+            - Path=/api/v1/analysis/**,/api/v1/imageAnalysis/**
+
+
+        - id: imageManagement-service
+          uri: lb:http://IMAGEMANAGEMENT-SERVICE
+          predicates:
+            - Path=/api/v1/images/**,/api/v1/image/**
+
+        - id: report-service
+          uri: lb:http://REPORT-SERVICE
+          predicates:
+            - Path=/api/v1/reports/**,/api/v1/report/**,/api/v1/cases/**,/api/v1/templates/**,/api/v1/legal-documents/**
+
+        # Add a route for actuator endpoints
+        - id: actuator
+          uri: lb:http://GATEWAY-SERVICE
+          predicates:
+            - Path=/actuator/**
+          filters:
+            - PreserveHostHeader
+        # Add a direct route for health checks
+        - id: health-checks
+          uri: lb:http://USER-SERVICE
+          predicates:
+            - Path=/api/v1/public/health
+          filters:
+            - PreserveHostHeader
+
+server:
+  port: 8222
+
+# Add logging configuration
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway.route.RouteDefinitionLocator: INFO
+    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: DEBUG
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: TRACE
+    # Eureka client logging
+    com.netflix.discovery: DEBUG
+    com.netflix.eureka: DEBUG
+
+
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true

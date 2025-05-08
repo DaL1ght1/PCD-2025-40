@@ -1,0 +1,28 @@
+spring:
+  data:
+    mongodb:
+      database: Images
+      username: admin
+      password: admin
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      servlet:
+        multipart:
+          max-file-size: 10MB
+          max-request-size: 10MB
+
+
+
+
+server:
+  port: 8050
+  springdoc:
+    api:
+      cs:
+        path: /v3/api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+  tomcat:
+    max-http-form-post-size: 100MB
+    max-swallow-size: -1

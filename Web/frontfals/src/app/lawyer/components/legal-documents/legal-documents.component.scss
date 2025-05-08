@@ -1,0 +1,102 @@
+.document-editor {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 400px;
+}
+
+.document-preview {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14px;
+  line-height: 1.8;
+  max-height: 60vh; // Limit preview height
+  overflow-y: auto; // Add scroll if content overflows
+
+  .document-title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+
+  .document-content {
+    text-align: justify;
+
+    p {
+      margin-bottom: 1rem;
+    }
+    // Ensure placeholders are visible in preview too
+    ::ng-deep .placeholder {
+      background-color: #fffacd;
+      padding: 0 2px;
+      border-radius: 2px;
+      border-bottom: 1px dashed #ffd700;
+      font-weight: bold; // Make them stand out
+    }
+  }
+}
+
+.template-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.badge {
+  text-transform: capitalize;
+  padding: 0.4em 0.6em;
+  font-size: 0.75rem;
+}
+
+// Placeholder highlighting in the editor
+textarea {
+  // Basic styling if directive doesn't handle it fully
+  &.contains-placeholder { // Add a class perhaps?
+    // Example: subtle background change
+    // background-color: #fffef0;
+  }
+}
+::ng-deep .placeholder {
+  background-color: #fffacd;
+  padding: 0 2px;
+  border-radius: 2px;
+  border-bottom: 1px dashed #ffd700;
+  font-weight: bold; // Make them stand out
+}
+
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.dropdown-menu {
+
+}
+.dropdown-item.cursor-pointer {
+  cursor: pointer;
+}
+
+.modal {
+  &.fade {
+    transition: opacity 0.15s linear;
+  }
+}
+.modal-dialog-scrollable .modal-body {
+  overflow-y: auto;
+}

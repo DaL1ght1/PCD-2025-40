@@ -1,0 +1,208 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Image Analysis</h2>
+        <button class="btn btn-outline-secondary" routerLink="/images">
+          <i class="fas fa-arrow-left me-2"></i> Back to Images
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger my-5">{{ errorMessage }}</div>
+
+
+  <div *ngIf="!loading && !errorMessage && image">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Original Image</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="image-container">
+              <img [src]="image.url" [alt]="image.filename" class="img-fluid">
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>{{ image.filename }}</span>
+              <!-- Link to detail page, use image.id -->
+              <button class="btn btn-sm btn-outline-primary" [routerLink]="['/images/detail', image.id]">
+                <i class="fas fa-info-circle me-1"></i> Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Analysis Options</h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="analysisForm" (ngSubmit)="analyzeImage()">
+              <!-- Temporarily hardcoded as per original comment -->
+              <h4><i>The only type available now is Falsified Signature detection</i></h4>
+              <!-- If you add more analysis types back -->
+              <!-- <div class="mb-3">
+                <label for="analysisType" class="form-label">Analysis Type</label>
+                <select id="analysisType" class="form-select" formControlName="analysisType">
+                  <option value="">Select Analysis Type</option>
+                  <option *ngFor="let type of analysisTypes" [value]="type.id">{{ type.name }}</option>
+                </select>
+                <div class="form-text">Select the type of analysis to perform on this image</div>
+              </div> -->
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary" [disabled]="analyzing">
+                  <span *ngIf="analyzing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  <i *ngIf="!analyzing" class="fas fa-microscope me-2"></i>
+                  Analyze Image
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Analysis Results</h5>
+          </div>
+          <div class="card-body">
+            <!-- Display current/selected analysis result -->
+            <div *ngIf="!currentAnalysis && (!image.analysisResults || image.analysisResults.length === 0)" class="text-center p-4">
+              <i class="fas fa-info-circle fa-3x mb-3 text-muted"></i>
+              <p>No analysis results available for this image. Click "Analyze Image" to begin.</p>
+            </div>
+
+            <div *ngIf="currentAnalysis" class="analysis-result">
+              <div class="result-header">
+                <h6>{{ currentAnalysis.analysisType }}</h6>
+                <span class="badge" [ngClass]="currentAnalysis.isFalsified ? 'bg-danger' : 'bg-success'">
+                  {{ currentAnalysis.isFalsified ? 'Falsified' : 'Authentic' }}
+                </span>
+              </div>
+
+              <div class="result-details">
+                <div class="mb-3">
+                  <h6>Confidence Score</h6>
+                  <div class="progress">
+                    <!-- Binding uses 1-confidenceScore -->
+                    <div class="progress-bar"
+                         [ngClass]="currentAnalysis.isFalsified ? 'bg-danger' : 'bg-success'"
+                         [style.width]="((1-currentAnalysis.confidenceScore) * 100) + '%'">
+                      {{1- currentAnalysis.confidenceScore | percent }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <h6>Analysis Date</h6>
+                  <!-- Use analysisDate from AnalysisDto -->
+                  <p>{{ currentAnalysis.date | date:'medium' }}</p>
+                </div>
+
+                <div class="mb-3">
+                  <h6>Analyzed By</h6>
+                  <p>{{name }}</p>
+                </div>
+
+                <div class="mb-3" *ngIf="currentAnalysis.detailedResults">
+                  <h6>Detailed Results</h6>
+                  <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                      <thead>
+                      <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let item of getDetailedResults()">
+                        <td>{{ item.key }}</td>
+                        <td>{{ item.value }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Display list of previous analyses -->
+            <div *ngIf="!currentAnalysis && image.analysisResults && image.analysisResults.length > 0" class="previous-analyses">
+              <h6>Previous Analyses</h6>
+              <div class="list-group">
+                <!-- Use AnalysisDto properties -->
+                <a *ngFor="let analysis of image.analysisResults"
+                   href="javascript:void(0)"
+                   class="list-group-item list-group-item-action"
+                   (click)="selectAnalysis(analysis)">
+                  <div class="d-flex w-100 justify-content-between">
+                    <span class="badge" [ngClass]="analysis.isFalsified ? 'bg-danger' : 'bg-success'">
+                      {{ analysis.isFalsified ? 'Falsified' : 'Authentic' }}
+                    </span>
+                    <span>{{ analysis.analysisType }}</span>
+                  </div>
+                  <small>{{ analysis.analysisDate | date:'short' }}</small> <!-- Use analysisDate -->
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Updated Auto-Generated Reports Section -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Auto-Generated Reports</h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="loadingReports" class="text-center p-3">
+              <app-loading-spinner></app-loading-spinner>
+              <p class="mt-2">Loading reports...</p>
+            </div>
+
+            <div *ngIf="!loadingReports && autoGeneratedReports.length === 0" class="text-center p-4">
+              <i class="fas fa-file-alt fa-3x mb-3 text-muted"></i>
+              <p>No auto-generated reports available for this image.</p>
+            </div>
+
+            <div *ngIf="!loadingReports && autoGeneratedReports.length > 0" class="auto-generated-reports">
+              <div class="list-group">
+                <div *ngFor="let report of autoGeneratedReports" class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">{{ report.title }}</h6>
+                    <span class="badge bg-info">{{ report.reportType }}</span>
+                  </div>
+                  <p *ngIf="report.description">{{ report.description }}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">Created: {{ getFormattedDate(report.createdAt) }}</small>
+                    <div class="btn-group">
+                      <button *ngIf="report.pdfUrl" class="btn btn-sm btn-outline-secondary" (click)="window.open(report.pdfUrl, '_blank')">
+                        <i class="fas fa-file-pdf me-1"></i> PDF
+                      </button>
+                      <button class="btn btn-sm btn-outline-primary" [routerLink]="['/cases/reports', report.id]">
+                        <i class="fas fa-eye me-1"></i> View
+                      </button>
+                    </div>
+                  </div>
+                  <div *ngIf="report.caseNumber" class="mt-2">
+                    <small class="text-muted">Case:
+                      <a [routerLink]="['/cases/detail', report.caseId]" class="text-primary">{{ report.caseNumber }}</a>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

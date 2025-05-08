@@ -1,0 +1,346 @@
+<div class="container-fluid">
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+  </div>
+
+  <div class="row" *ngIf="!isEditing && !isReviewing && !isEditingTemplate">
+    <div class="col-12 mb-4">
+      <h2>Legal Documents</h2>
+      <p class="text-muted">Create, edit, and manage your legal documents using professionally verified templates</p>
+    </div>
+    <div class="col-md-12 mb-4">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5>Document Repository</h5>
+          <div class="d-flex">
+            <div class="input-group me-2">
+              <input type="text" class="form-control" placeholder="Search documents..." [(ngModel)]="searchTerm" (input)="filterDocuments()">
+              <select class="form-select" style="max-width: 150px;" [(ngModel)]="selectedCategory" (change)="filterDocuments()">
+                <option value="all">All Categories</option>
+                <option *ngFor="let category of documentCategories" [value]="category">{{ category | titlecase }}</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#templateModal">
+              <i class="fas fa-plus"></i> New Document
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive" *ngIf="filterDocuments().length > 0; else noDocuments">
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th>Title</th>
+                <th>Template</th>
+                <th>Last Updated</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let document of filterDocuments()">
+                <td>{{ document.title }}</td>
+                <td>{{ getTemplateName(document.templateId) }}</td>
+                <td>{{ document.updatedAt | date:'medium' }}</td>
+                <td><span [class]="getStatusClass(document.status)">{{ document.status | titlecase }}</span></td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-primary" (click)="editDocument(document)" [disabled]="document.status === 'finalized'"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="btn btn-sm btn-outline-info" (click)="reviewDocument(document)"><i class="fas fa-eye"></i> Review</button>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-download"></i> Export</button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item cursor-pointer" (click)="exportDocument(document, 'pdf')">PDF</a></li>
+                        <li><a class="dropdown-item cursor-pointer" (click)="exportDocument(document, 'docx')">Word (DOCX)</a></li>
+                      </ul>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteDocument(document)" [disabled]="document.status === 'finalized'"><i class="fas fa-trash"></i> Delete</button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #noDocuments>
+            <div class="text-center py-5">
+              <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+              <p>No documents found matching your criteria. Create your first legal document by clicking "New Document".</p>
+              <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#templateModal">Create Document</button>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="isEditing && currentDocument">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5>{{ isCreating ? 'Create New Document' : 'Edit Document' }}</h5>
+          <div>
+            <button class="btn btn-outline-secondary me-2" (click)="resetState()">Cancel</button>
+            <button class="btn btn-primary" (click)="saveDocument()">Save</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="documentTitle" class="form-label">Document Title</label>
+            <input
+              type="text"
+              class="form-control"
+              id="documentTitle"
+              [(ngModel)]="currentDocument.title"
+              placeholder="Enter document title"
+              required
+            >
+          </div>
+
+          <div class="mb-3" *ngIf="currentDocument.tags">
+            <label class="form-label">Tags</label>
+            <div class="d-flex flex-wrap gap-2 mb-2">
+              <span *ngFor="let tag of currentDocument.tags" class="badge bg-secondary p-2">
+                {{ tag }}
+                <i class="fas fa-times ms-1 cursor-pointer" (click)="removeTag(tag)"></i>
+              </span>
+              <div class="input-group" style="max-width: 200px;">
+                <input #tagInput type="text" class="form-control form-control-sm" placeholder="Add tag..." (keyup.enter)="addTag(tagInput.value); tagInput.value = ''">
+                <button class="btn btn-sm btn-outline-secondary" type="button" (click)="addTag(tagInput.value); tagInput.value = ''">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="documentContent" class="form-label">Document Content</label>
+            <div class="alert alert-info" *ngIf="selectedTemplate && selectedTemplate.id !== 'blank'">
+              <i class="fas fa-info-circle"></i>
+              You're using the <strong>{{ selectedTemplate.name }}</strong> template.
+              Fill in the sections marked like <span class="placeholder">[Placeholder]</span> with your specific information.
+            </div>
+            <div class="alert alert-warning" *ngIf="checkForPlaceholders()">
+              <i class="fas fa-exclamation-triangle"></i>
+              Your document still contains unfilled placeholders (e.g., <span class="placeholder">[Placeholder]</span>). Make sure to replace all before finalizing.
+            </div>
+            <textarea
+              class="form-control document-editor"
+              id="documentContent"
+              [(ngModel)]="currentDocument.content"
+              rows="20"
+              appHighlightPlaceholder
+            ></textarea>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-secondary" (click)="resetState()">Cancel</button>
+            <div>
+              <button class="btn btn-outline-info me-2" (click)="isReviewing = true; isEditing = false">
+                Preview
+              </button>
+              <button class="btn btn-primary" (click)="saveDocument()">
+                Save Document
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="isReviewing && currentDocument">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5>Review Document: {{ currentDocument.title }}</h5>
+          <div>
+            <button class="btn btn-outline-secondary me-2" (click)="resetState()">Back to List</button>
+            <button class="btn btn-outline-primary me-2" (click)="isEditing = true; isReviewing = false" *ngIf="currentDocument.status !== 'finalized'">
+              Edit
+            </button>
+            <div class="btn-group me-2">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-download"></i> Export
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item cursor-pointer" (click)="exportDocument(currentDocument, 'pdf')">PDF</a></li>
+                <li><a class="dropdown-item cursor-pointer" (click)="exportDocument(currentDocument, 'docx')">Word (DOCX)</a></li>
+              </ul>
+            </div>
+            <button
+              class="btn btn-success"
+              *ngIf="currentDocument.status !== 'finalized'"
+              (click)="finalizeDocument(currentDocument)"
+              [disabled]="checkForPlaceholders()"
+            >
+              Finalize Document
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-warning" *ngIf="checkForPlaceholders()">
+            <i class="fas fa-exclamation-triangle"></i>
+            This document still contains unfilled placeholders (e.g., <span class="placeholder">[Placeholder]</span>). You need to fill all before finalizing.
+          </div>
+
+          <div class="document-preview p-4 border rounded bg-light">
+            <h3 class="document-title mb-4">{{ currentDocument.title }}</h3>
+            <div class="document-content" [innerHTML]="currentDocument.content | safeHtml"></div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-secondary" (click)="resetState()">Back to List</button>
+            <div>
+              <button class="btn btn-outline-primary me-2" (click)="isEditing = true; isReviewing = false" *ngIf="currentDocument.status !== 'finalized'">
+                Edit Document
+              </button>
+              <div class="btn-group me-2">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-download"></i> Export
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item cursor-pointer" (click)="exportDocument(currentDocument, 'pdf')">PDF</a></li>
+                  <li><a class="dropdown-item cursor-pointer" (click)="exportDocument(currentDocument, 'docx')">Word (DOCX)</a></li>
+                </ul>
+              </div>
+              <button
+                class="btn btn-success"
+                *ngIf="currentDocument.status !== 'finalized'"
+                (click)="finalizeDocument(currentDocument)"
+                [disabled]="checkForPlaceholders()"
+              >
+                Finalize Document
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="isEditingTemplate && currentTemplate">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5>Edit Template: {{ templateEditForm.get('name')?.value }}</h5>
+          <div>
+            <button class="btn btn-sm btn-outline-danger me-3" (click)="deleteTemplate(currentTemplate)">
+              <i class="fas fa-trash"></i> Delete Template
+            </button>
+            <button class="btn btn-outline-secondary me-2" (click)="resetState()">Cancel</button>
+            <button class="btn btn-primary" (click)="saveTemplate()" [disabled]="templateEditForm.invalid">Save Template</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="templateEditForm">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="templateName" class="form-label">Template Name *</label>
+                <input type="text" id="templateName" formControlName="name" class="form-control" [class.is-invalid]="templateEditForm.get('name')?.invalid && templateEditForm.get('name')?.dirty">
+                <div *ngIf="templateEditForm.get('name')?.invalid && templateEditForm.get('name')?.dirty" class="invalid-feedback">
+                  <span *ngIf="templateEditForm.get('name')?.errors?.['required']">Name is required.</span>
+                  <span *ngIf="templateEditForm.get('name')?.errors?.['minlength']">Name must be at least 3 chars.</span>
+                  <span *ngIf="templateEditForm.get('name')?.errors?.['maxlength']">Name max 100 chars.</span>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="templateCategory" class="form-label">Category *</label>
+                <input type="text" id="templateCategory" formControlName="category" class="form-control" list="categoryDatalist" [class.is-invalid]="templateEditForm.get('category')?.invalid && templateEditForm.get('category')?.dirty">
+                <datalist id="categoryDatalist">
+                  <option *ngFor="let cat of documentCategories" [value]="cat">{{cat | titlecase}}</option>
+                </datalist>
+                <div *ngIf="templateEditForm.get('category')?.invalid && templateEditForm.get('category')?.dirty" class="invalid-feedback">
+                  Category is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="templateDescription" class="form-label">Description</label>
+              <textarea id="templateDescription" formControlName="description" class="form-control" rows="3" [class.is-invalid]="templateEditForm.get('description')?.invalid && templateEditForm.get('description')?.dirty"></textarea>
+              <div *ngIf="templateEditForm.get('description')?.invalid && templateEditForm.get('description')?.dirty" class="invalid-feedback">
+                <span *ngIf="templateEditForm.get('description')?.errors?.['maxlength']">Description max 500 chars.</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="templateContent" class="form-label">Template Content (HTML) *</label>
+              <div class="alert alert-warning" *ngIf="checkForPlaceholders()">
+                <i class="fas fa-exclamation-triangle"></i>
+                This template still contains placeholders (e.g., <span class="placeholder">[Placeholder]</span>).
+              </div>
+              <textarea
+                class="form-control document-editor"
+                id="templateContent"
+                formControlName="content"
+                rows="25"
+                appHighlightPlaceholder
+                [class.is-invalid]="templateEditForm.get('content')?.invalid && templateEditForm.get('content')?.dirty"
+              ></textarea>
+              <div *ngIf="templateEditForm.get('content')?.invalid && templateEditForm.get('content')?.dirty" class="invalid-feedback">
+                Content is required.
+              </div>
+            </div>
+          </form>
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-secondary" (click)="resetState()">Cancel</button>
+            <div>
+              <button class="btn btn-sm btn-outline-danger me-3" (click)="deleteTemplate(currentTemplate)">
+                Delete Template
+              </button>
+              <button class="btn btn-primary" (click)="saveTemplate()" [disabled]="templateEditForm.invalid">
+                Save Template
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="templateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="templateModalLabel">Select Document Template</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <div class="btn-group w-100">
+              <button class="btn" [class.btn-primary]="selectedCategory === 'all'" [class.btn-outline-primary]="selectedCategory !== 'all'" (click)="selectedCategory = 'all'">All</button>
+              <button *ngFor="let category of documentCategories" class="btn" [class.btn-primary]="selectedCategory === category" [class.btn-outline-primary]="selectedCategory !== category" (click)="selectedCategory = category">{{ category | titlecase }}</button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3" *ngFor="let template of templates | filterByCategory:selectedCategory">
+              <div class="card h-100 template-card">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">{{ template.name }}</h5>
+                  <p class="card-text flex-grow-1">{{ template.description }}</p>
+                  <div class="mt-auto d-flex justify-content-between">
+                    <button class="btn btn-sm btn-primary" (click)="createNewDocument(template)" data-bs-dismiss="modal">Use Template</button>
+                    <button class="btn btn-sm btn-outline-secondary" (click)="editTemplate(template, $event)" title="Edit Template"><i class="fas fa-edit"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="card h-100 template-card">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">Blank Document</h5>
+                  <p class="card-text flex-grow-1">Start with a blank document and create your own legal content.</p>
+                  <button class="btn btn-sm btn-outline-primary mt-auto" (click)="createNewDocument({ id: 'blank', name: 'Blank Document', description: 'Custom document', content: '', category: 'Custom' })" data-bs-dismiss="modal">Start Blank</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

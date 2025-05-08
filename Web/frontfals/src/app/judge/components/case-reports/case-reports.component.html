@@ -1,0 +1,165 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Case Reports</h2>
+        <div>
+          <button class="btn btn-outline-secondary me-2" routerLink="/judge/dashboard">
+            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+          </button>
+          <button class="btn btn-outline-primary" routerLink="/judge/all-cases">
+            <i class="fas fa-list me-2"></i> All Cases
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Filters</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="mb-3 mb-md-0">
+                  <label for="title" class="form-label">Title</label>
+                  <input
+                    type="text"
+                    id="title"
+                    formControlName="title"
+                    class="form-control"
+                    placeholder="Search by title..."
+                  >
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="mb-3 mb-md-0">
+                  <label for="status" class="form-label">Status</label>
+                  <select id="status" formControlName="status" class="form-select">
+                    <option [ngValue]="null">All Statuses</option>
+                    <option [ngValue]="'PENDING'">Pending</option>
+                    <option [ngValue]="'UNDER_REVIEW'">Under Review</option>
+                    <option [ngValue]="'COMPLETED'">Completed</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2 d-flex align-items-end">
+                <div class="d-grid gap-2 w-100">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search me-2"></i> Search
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary" (click)="resetFilters()">
+                    <i class="fas fa-undo me-2"></i> Reset
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-5">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Cases Table -->
+  <div *ngIf="!loading && !errorMessage">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Cases Under Review</h5>
+            <span class="badge bg-primary">{{ totalElements }} Cases</span>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                  <th (click)="sort('id')" class="sortable">
+                    Case ID <i class="fas" [ngClass]="getSortIcon('id')"></i>
+                  </th>
+                  <th (click)="sort('title')" class="sortable">
+                    Title <i class="fas" [ngClass]="getSortIcon('title')"></i>
+                  </th>
+                  <th (click)="sort('createdAt')" class="sortable">
+                    Submission Date <i class="fas" [ngClass]="getSortIcon('createdAt')"></i>
+                  </th>
+                  <th (click)="sort('status')" class="sortable">
+                    Status <i class="fas" [ngClass]="getSortIcon('status')"></i>
+                  </th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let case of cases">
+                  <td>{{ case.id }}</td>
+                  <td>{{ case.title }}</td>
+                  <td>{{ case.createdAt | date }}</td>
+                  <td><app-status-badge [status]="case.status"></app-status-badge></td>
+                  <td>
+                    <a [routerLink]="['/judge/reports', case.id]" class="btn btn-sm btn-primary">
+                      <i class="fas fa-eye me-1"></i> Review
+                    </a>
+                  </td>
+                </tr>
+                <tr *ngIf="cases.length === 0">
+                  <td colspan="5" class="text-center py-3">No cases found matching your criteria</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div *ngIf="totalPages > 1" class="card-footer">
+            <nav aria-label="Case pagination">
+              <ul class="pagination justify-content-center mb-0">
+                <li class="page-item" [class.disabled]="currentPage === 0">
+                  <button class="page-link" (click)="changePage(0)" aria-label="First">
+                    <span aria-hidden="true">&laquo;</span>
+                  </button>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === 0">
+                  <button class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+                    <span aria-hidden="true">&lt;</span>
+                  </button>
+                </li>
+
+                <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+                  <li class="page-item" [class.active]="i === currentPage" *ngIf="i >= currentPage - 2 && i <= currentPage + 2">
+                    <button class="page-link" (click)="changePage(i)">{{ i + 1 }}</button>
+                  </li>
+                </ng-container>
+
+                <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                  <button class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+                    <span aria-hidden="true">&gt;</span>
+                  </button>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                  <button class="page-link" (click)="changePage(totalPages - 1)" aria-label="Last">
+                    <span aria-hidden="true">&raquo;</span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

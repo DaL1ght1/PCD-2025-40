@@ -1,0 +1,113 @@
+.app-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  padding: 0 20px;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+
+  // Match sidebar's font styles
+  font-family: var(--font-family);
+
+  .toolbar-left, .toolbar-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .toolbar-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 0 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .toolbar-toggle-btn, .toolbar-action-btn {
+    width: 36px;
+    height: 36px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: relative;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &:focus {
+      outline: 2px solid rgba(255, 255, 255, 0.3);
+      outline-offset: 2px;
+    }
+
+    i {
+      font-size: 16px;
+    }
+  }
+
+  .toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .notification-btn {
+    position: relative;
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+}
+
+// Dark theme adjustments
+:host-context(.dark-theme) .app-toolbar {
+  background: linear-gradient(90deg, #2c3e50 0%, #1a252f 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+// Dark theme adjustments for notification badge
+:host-context(.dark-theme) .notification-badge {
+  background-color: var(--accent-light);
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .app-toolbar {
+    padding: 0 12px;
+    height: 60px;
+
+    .toolbar-title {
+      font-size: 1.1rem;
+      max-width: 200px;
+    }
+
+    .toolbar-toggle-btn, .toolbar-action-btn {
+      width: 32px;
+      height: 32px;
+    }
+  }
+}

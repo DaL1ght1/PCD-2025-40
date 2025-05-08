@@ -1,0 +1,322 @@
+<!--<div class="fids-contact">-->
+<!--  &lt;!&ndash; Navbar &ndash;&gt;-->
+<!--  <nav class="navbar" [class.navbar-scrolled]="isScrolled">-->
+<!--    <div class="container">-->
+<!--      <div class="navbar-brand">-->
+<!--        <h2>FIDS</h2>-->
+<!--        <span class="tagline">Falsified Image Detection System</span>-->
+<!--      </div>-->
+
+<!--      <div class="navbar-menu" [class.active]="menuOpen">-->
+<!--        <ul class="navbar-links">-->
+<!--          <li>-->
+<!--            <a [routerLink]="['/workflow']" fragment="features" (click)="closeMenu()"-->
+<!--            >Features</a-->
+<!--            >-->
+<!--          </li>-->
+<!--          <li>-->
+<!--&lt;!&ndash;            <a [routerLink]="['/workflow']" fragment="workflow" (click)="closeMenu()"&ndash;&gt;-->
+<!--            >How It Works</a-->
+<!--            >-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <a [routerLink]="['/workflow']" fragment="roles" (click)="closeMenu()"-->
+<!--            >User Roles</a-->
+<!--            >-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <a [routerLink]="['/workflow']" fragment="about" (click)="closeMenu()"-->
+<!--            >About</a-->
+<!--            >-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </div>-->
+
+<!--      <div class="navbar-actions">-->
+<!--        <ng-container *ngIf="isAuthenticated; else notAuthenticated">-->
+<!--          <button class="btn btn-dashboard" (click)="navigateToDashboard()">-->
+<!--            <i class="material-icons">dashboard</i>-->
+<!--            Dashboard-->
+<!--          </button>-->
+<!--          <button class="btn btn-outline" (click)="logout()">-->
+<!--            <i class="material-icons">logout</i>-->
+<!--            Logout-->
+<!--          </button>-->
+<!--        </ng-container>-->
+
+<!--        <ng-template #notAuthenticated>-->
+<!--          <a routerLink="/login" class="btn btn-ghost">Login</a>-->
+<!--          <a routerLink="/register" class="btn btn-primary">Sign Up</a>-->
+<!--        </ng-template>-->
+<!--      </div>-->
+
+<!--      <button class="menu-toggle" (click)="toggleMenu()">-->
+<!--        <span [class.active]="menuOpen"></span>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </nav>-->
+
+<!--  &lt;!&ndash; Hero Section &ndash;&gt;-->
+<!--  <section class="hero">-->
+<!--    <div class="particles-container">-->
+<!--      <div class="particle" *ngFor="let particle of particles"></div>-->
+<!--    </div>-->
+
+<!--    <div class="container">-->
+<!--      <div class="hero-content">-->
+<!--        <div class="hero-text">-->
+<!--          <h1 class="hero-title">-->
+<!--            <span class="highlight">Contact</span> Our Team-->
+<!--          </h1>-->
+<!--          <p class="hero-description">-->
+<!--            Have questions about our Falsified Image Detection System? Reach out-->
+<!--            to our team for support, sales inquiries, or to learn more about how-->
+<!--            FIDS can assist you.-->
+<!--          </p>-->
+
+<!--          <div class="hero-actions">-->
+<!--            <a href="#contact-form" class="btn btn-primary btn-lg">-->
+<!--              Get in Touch-->
+<!--              <i class="material-icons">arrow_forward</i>-->
+<!--            </a>-->
+<!--            <a href="#faq" class="btn btn-text">-->
+<!--              View FAQs-->
+<!--              <i class="material-icons">help</i>-->
+<!--            </a>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <div class="hero-visual">-->
+<!--          <div class="animation-container">-->
+<!--            <img-->
+<!--              class="image-contact"-->
+<!--              ngSrc="assets/images/contact-illustration.png"-->
+<!--              alt="Contact Illustration"-->
+<!--              fill-->
+<!--            />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="hero-wave">-->
+<!--      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">-->
+<!--        <path-->
+<!--          fill="var(&#45;&#45;bg-color)"-->
+<!--          fill-opacity="1"-->
+<!--          d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,133.3C672,139,768,181,864,181.3C960,181,1056,139,1152,122.7C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320L0,320Z"-->
+<!--        ></path>-->
+<!--      </svg>-->
+<!--    </div>-->
+<!--  </section>-->
+
+<!--  &lt;!&ndash; Contact Form Section &ndash;&gt;-->
+<!--  <section id="contact-form" class="contact-form">-->
+<!--    <div class="container">-->
+<!--      < successo-header>-->
+<!--      <h2 class="section-title">Get in Touch</h2>-->
+<!--      <p class="section-description">-->
+<!--        Fill out the form below, and our team will respond within 24 hours.-->
+<!--      </p>-->
+<!--    </div>-->
+
+<!--    <div class="form-container">-->
+<!--      <form (ngSubmit)="onSubmit()" #contactForm="ngForm">-->
+<!--        <div class="form-grid">-->
+<!--          <div class="form-group">-->
+<!--            <label for="name">Full Name</label>-->
+<!--            <input-->
+<!--              type="text"-->
+<!--              id="name"-->
+<!--              name="name"-->
+<!--              [(ngModel)]="formData.name"-->
+<!--              required-->
+<!--              class="form-input"-->
+<!--              placeholder="Enter your full name"-->
+<!--            />-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <label for="email">Email Address</label>-->
+<!--            <input-->
+<!--              type="email"-->
+<!--              id="email"-->
+<!--              name="email"-->
+<!--              [(ngModel)]="formData.email"-->
+<!--              required-->
+<!--              email-->
+<!--              class="form-input"-->
+<!--              placeholder="Enter your email address"-->
+<!--            />-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <label for="subject">Subject</label>-->
+<!--            <input-->
+<!--              type="text"-->
+<!--              id="subject"-->
+<!--              name="subject"-->
+<!--              [(ngModel)]="formData.subject"-->
+<!--              required-->
+<!--              class="form-input"-->
+<!--              placeholder="Enter the subject"-->
+<!--            />-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <label for="role">Your Role</label>-->
+<!--            <select-->
+<!--              id="role"-->
+<!--              name="role"-->
+<!--              [(ngModel)]="formData.role"-->
+<!--              class="form-input"-->
+<!--            >-->
+<!--              <option value="" disabled>Select your role</option>-->
+<!--              <option value="investigator">Investigator</option>-->
+<!--              <option value="expert">Expert</option>-->
+<!--              <option value="lawyer">Lawyer</option>-->
+<!--              <option value="judge">Judge</option>-->
+<!--              <option value="other">Other</option>-->
+<!--            </select>-->
+<!--          </div>-->
+<!--          <div class="form-group full-width">-->
+<!--            <label for="message">Message</label>-->
+<!--            <textarea-->
+<!--              id="message"-->
+<!--              name="message"-->
+<!--              [(ngModel)]="formData.message"-->
+<!--              required-->
+<!--              class="form-input"-->
+<!--              rows="6"-->
+<!--              placeholder="Tell us how we can help you"-->
+<!--            ></textarea>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="form-actions">-->
+<!--          <button-->
+<!--            type="submit"-->
+<!--            class="btn btn-primary btn-lg"-->
+<!--            [disabled]="!contactForm.valid"-->
+<!--          >-->
+<!--            Send Message-->
+<!--            <i class="material-icons">send</i>-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; FAQ Section &ndash;&gt;-->
+<!--<section id="faq" class="faq">-->
+<!--  <div class="container">-->
+<!--    <div class="section-header">-->
+<!--      <h2 class="section-title">Frequently Asked Questions</h2>-->
+<!--      <p class="section-description">-->
+<!--        Find answers to common questions about FIDS and our services.-->
+<!--      </p>-->
+<!--    </div>-->
+
+<!--    <div class="faq-list">-->
+<!--      <div-->
+<!--        class="faq-item"-->
+<!--        *ngFor="let faq of faqs; let i = index"-->
+<!--        [class.active]="activeFaq === i"-->
+<!--        (click)="toggleFaq(i)"-->
+<!--      >-->
+<!--        <div class="faq-question">-->
+<!--          <h3>{{ faq.question }}</h3>-->
+<!--          <i class="material-icons">{{-->
+<!--              activeFaq === i ? "expand_less" : "expand_more"-->
+<!--            }}</i>-->
+<!--        </div>-->
+<!--        <div class="faq-answer" *ngIf="activeFaq === i">-->
+<!--          <p>{{ faq.answer }}</p>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; Footer &ndash;&gt;-->
+<!--<footer class="footer">-->
+<!--  <div class="container">-->
+<!--    <div class="footer-grid">-->
+<!--      <div class="footer-brand">-->
+<!--        <h2 class="footer-logo">FIDS</h2>-->
+<!--        <p class="footer-tagline">-->
+<!--          Advanced technology for image falsification detection and analysis.-->
+<!--        </p>-->
+<!--        <div class="social-links">-->
+<!--          <a href="#" class="social-link">-->
+<!--            <i class="fab fa-twitter"></i>-->
+<!--          </a>-->
+<!--          <a href="#" class="social-link">-->
+<!--            <i class="fab fa-linkedin"></i>-->
+<!--          </a>-->
+<!--          <a href="#" class="social-link">-->
+<!--            <i class="fab fa-facebook"></i>-->
+<!--          </a>-->
+<!--          <a href="#" class="social-link">-->
+<!--            <i class="fab fa-instagram"></i>-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="footer-links">-->
+<!--        <div class="footer-links-column">-->
+<!--          <h3 class="footer-heading">Platform</h3>-->
+<!--          <ul class="footer-menu">-->
+<!--            <li><a href="#">Features</a></li>-->
+<!--            <li><a href="#">How It Works</a></li>-->
+<!--            <li><a href="#">Security</a></li>-->
+<!--            <li><a href="#">Pricing</a></li>-->
+<!--          </ul>-->
+<!--        </div>-->
+
+<!--        <div class="footer-links-column">-->
+<!--          <h3 class="footer-heading">Resources</h3>-->
+<!--          <ul class="footer-menu">-->
+<!--            <li><a href="#">Documentation</a></li>-->
+<!--            <li><a href="#">API</a></li>-->
+<!--            <li><a href="#">Blog</a></li>-->
+<!--            <li><a href="#">Support</a></li>-->
+<!--          </ul>-->
+<!--        </div>-->
+
+<!--        <div class="footer-links-column">-->
+<!--          <h3 class="footer-heading">Company</h3>-->
+<!--          <ul class="footer-menu">-->
+<!--            <li><a href="#">About Us</a></li>-->
+<!--            <li><a href="#">Careers</a></li>-->
+<!--            <li><a href="#">Contact</a></li>-->
+<!--            <li><a href="#">Legal</a></li>-->
+<!--          </ul>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="footer-newsletter">-->
+<!--        <h3 class="footer-heading">Stay Updated</h3>-->
+<!--        <p>Subscribe to our newsletter for the latest updates and features.</p>-->
+<!--        <div class="newsletter-form">-->
+<!--          <input-->
+<!--            type="email"-->
+<!--            placeholder="Your email address"-->
+<!--            class="newsletter-input"-->
+<!--          />-->
+<!--          <button class="btn btn-primary newsletter-btn">Subscribe</button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="footer-bottom">-->
+<!--      <p class="copyright">-->
+<!--        © {{ currentYear }} Falsified Image Detection System. All rights-->
+<!--        reserved.-->
+<!--      </p>-->
+<!--      <div class="footer-legal">-->
+<!--        <a href="#">Privacy Policy</a>-->
+<!--        <a href="#">Terms of Service</a>-->
+<!--        <a href="#">Cookies</a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</footer>-->
+<!--</div>-->

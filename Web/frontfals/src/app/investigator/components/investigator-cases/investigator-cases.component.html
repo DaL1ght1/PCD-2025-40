@@ -1,0 +1,168 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>My Investigations</h2>
+        <button class="btn btn-primary" routerLink="/investigator/submit">
+          <i class="fas fa-plus-circle me-2"></i> Submit New Case
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Filter Cases</h5>
+            <button class="btn btn-sm btn-outline-secondary" (click)="resetFilters()">
+              <i class="fas fa-redo me-1"></i> Reset
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="statusFilter" class="form-label">Status</label>
+              <!-- Bind to statusFilter -->
+              <select id="statusFilter" class="form-select" [(ngModel)]="statusFilter" (change)="applyFilters()">
+                <option value="">All Statuses</option>
+                <option value="PENDING">{{ CaseStatus.PENDING | titlecase }}</option>
+                <option value="ASSIGNED">{{ CaseStatus.ASSIGNED | titlecase }}</option>
+                <option value="IN_PROGRESS">{{ CaseStatus.IN_PROGRESS | titlecase }}</option>
+                <option value="ANALYSIS_COMPLETE">{{ CaseStatus.ANALYSIS_COMPLETE | titlecase }}</option>
+                <option value="UNDER_REVIEW">{{ CaseStatus.UNDER_REVIEW | titlecase }}</option>
+                <option value="COMPLETED">{{ CaseStatus.COMPLETED | titlecase }}</option>
+                <option value="REJECTED">{{ CaseStatus.REJECTED | titlecase }}</option>
+                <option value="ARCHIVED">{{ CaseStatus.ARCHIVED | titlecase }}</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="dateFilter" class="form-label">Date Range</label>
+              <!-- Date filter needs backend implementation to filter on createdAt -->
+              <!-- Currently, this filter logic is in the frontend applyFilters, which won't work with backend pagination -->
+              <!-- If backend searchCases supports startDate/endDate, use those -->
+              <select id="dateFilter" class="form-select" [(ngModel)]="dateFilter" (change)="applyFilters()">
+                <option value="">All Time</option>
+                <!-- Options for date range, require backend support or client-side filtering on fetched data -->
+                <!-- <option value="today">Today</option> -->
+                <!-- <option value="week">This Week</option> -->
+                <!-- <option value="month">This Month</option> -->
+                <!-- <option value="year">This Year</option> -->
+                <!-- Keep default for now if backend doesn't support -->
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="searchFilter" class="form-label">Search</label>
+              <!-- Bind to searchFilter -->
+              <input type="text" id="searchFilter" class="form-control" placeholder="Search by title or case number..."
+                     [(ngModel)]="searchFilter" (keyup.enter)="applyFilters()">
+              <!-- Use keyup.enter to trigger search or a dedicated search button -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <app-loading-spinner message="Loading cases..."></app-loading-spinner>
+  </div>
+
+  <div *ngIf="!loading">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Case List</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                  <th>Case ID</th>
+                  <th>Case Number</th> <!-- Added Case Number -->
+                  <th>Title</th>
+                  <th>Submission Date</th>
+                  <th>Status</th>
+                  <th>Images Count</th> <!-- Display images count -->
+                  <th>Analyses Count</th> <!-- Display analyses count -->
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loop through the `cases` array which is the content of the current page -->
+                <!-- No need for slice pipe if backend does pagination -->
+                <tr *ngFor="let case of casesResponse.cases">
+                  <td>{{ case.id }}</td>
+                  <td>{{ case.caseNumber }}</td> <!-- Bind to caseNumber -->
+                  <td>{{ case.title }}</td>
+                  <td>{{ case.createdAt | date:'mediumDate' }}</td>
+                  <td><app-status-badge [status]="case.status"></app-status-badge></td>
+                  <td>{{ case.imageIds?.length || 0 }}</td> <!-- Bind to imageIds.length -->
+                  <td>{{ case.analysisIds?.length || 0 }}</td> <!-- Bind to analysisIds.length -->
+                  <td>
+                    <div class="btn-group">
+                      <!-- View action - Assuming navigation to Case Detail -->
+                      <a [routerLink]="['/cases', case.id]" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-eye"></i> View
+                      </a>
+                      <!-- Reports action - Link to reports for this case -->
+                      <!-- Assuming a route like /investigator/cases/:caseId/reports -->
+                      <a [routerLink]="['/investigator/cases', case.id, 'reports']" class="btn btn-sm btn-outline-info">
+                        <i class="fas fa-file-alt"></i> Reports
+                      </a>
+                      <!-- Edit action (if allowed for investigator) -->
+                      <!-- <button class="btn btn-sm btn-outline-secondary">Edit</button> -->
+                      <!-- Delete action (if allowed for investigator) -->
+                      <!-- <button class="btn btn-sm btn-outline-danger">Delete</button> -->
+                    </div>
+                  </td>
+                </tr>
+                <!-- Check casesResponse.cases length -->
+                <tr *ngIf="casesResponse.cases.length === 0 && !loading">
+                  <td colspan="8" class="text-center py-3">No cases found matching your criteria</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Pagination -->
+          <div class="card-footer" *ngIf="casesResponse.totalElements > 0">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <!-- Pagination info using totalElements -->
+                Showing {{ casesResponse.totalElements > 0 ? ((currentPage - 1) * pageSize + 1) : 0 }} to {{ Math.min(currentPage * pageSize, currentPage * pageSize) }} of {{ casesResponse.totalElements }} cases
+              </div>
+              <nav aria-label="Page navigation">
+                <ul class="pagination mb-0">
+                  <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+                    <a class="page-link" href="#" (click)="goToPage(1, $event)">First</a>
+                  </li>
+                  <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+                    <a class="page-link" href="#" (click)="previousPage($event)">Previous</a>
+                  </li>
+                  <!-- Simple page links (optional) -->
+                  <!-- <li class="page-item" *ngFor="let page of getPages()" [ngClass]="{ active: currentPage === page }">
+                    <a class="page-link" href="#" (click)="goToPage(page, $event)">{{ page }}</a>
+                  </li> -->
+                  <li class="page-item disabled" *ngIf="totalPages > 0">
+                    <span class="page-link">Page {{ currentPage }} of {{ totalPages }}</span>
+                  </li>
+                  <li class="page-item" [ngClass]="{ disabled: currentPage === totalPages }">
+                    <a class="page-link" href="#" (click)="nextPage($event)">Next</a>
+                  </li>
+                  <li class="page-item" [ngClass]="{ disabled: currentPage === totalPages }">
+                    <a class="page-link" href="#" (click)="goToPage(totalPages, $event)">Last</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

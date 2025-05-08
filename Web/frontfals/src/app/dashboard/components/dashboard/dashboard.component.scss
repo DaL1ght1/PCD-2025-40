@@ -1,0 +1,41 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+  
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: var(--gray-color);
+    margin-bottom: 0;
+  }
+}
+
+.dashboard-content {
+  .card {
+    height: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 15px;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 20px;
+    
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+}

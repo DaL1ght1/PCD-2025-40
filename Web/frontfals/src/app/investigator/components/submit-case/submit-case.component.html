@@ -1,0 +1,117 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4>Submit New Case</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="caseForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="title" class="form-label">Case Title *</label>
+                  <input 
+                    type="text" 
+                    id="title" 
+                    formControlName="title" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': caseForm.get('title')?.invalid && caseForm.get('title')?.touched }"
+                  >
+                  <div class="invalid-feedback" *ngIf="caseForm.get('title')?.errors?.['required']">
+                    Title is required
+                  </div>
+                  <div class="invalid-feedback" *ngIf="caseForm.get('title')?.errors?.['minlength']">
+                    Title must be at least 5 characters
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="incidentDate" class="form-label">Incident Date *</label>
+                  <input 
+                    type="date" 
+                    id="incidentDate" 
+                    formControlName="incidentDate" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': caseForm.get('incidentDate')?.invalid && caseForm.get('incidentDate')?.touched }"
+                  >
+                  <div class="invalid-feedback" *ngIf="caseForm.get('incidentDate')?.errors?.['required']">
+                    Incident date is required
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="description" class="form-label">Case Description *</label>
+              <textarea 
+                id="description" 
+                formControlName="description" 
+                class="form-control" 
+                rows="4"
+                [ngClass]="{ 'is-invalid': caseForm.get('description')?.invalid && caseForm.get('description')?.touched }"
+              ></textarea>
+              <div class="invalid-feedback" *ngIf="caseForm.get('description')?.errors?.['required']">
+                Description is required
+              </div>
+              <div class="invalid-feedback" *ngIf="caseForm.get('description')?.errors?.['minlength']">
+                Description must be at least 20 characters
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="location" class="form-label">Location</label>
+              <input 
+                type="text" 
+                id="location" 
+                formControlName="location" 
+                class="form-control"
+              >
+            </div>
+            
+            <div class="mb-3">
+              <label for="additionalNotes" class="form-label">Additional Notes</label>
+              <textarea 
+                id="additionalNotes" 
+                formControlName="additionalNotes" 
+                class="form-control" 
+                rows="3"
+              ></textarea>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label">Upload Images *</label>
+              <ngx-dropzone 
+                (change)="onSelect($event)"
+                [multiple]="true"
+                [accept]="'image/*'"
+                [maxFileSize]="10000000"
+              >
+                <ngx-dropzone-label>
+                  <div class="dropzone-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Drag and drop images here, or click to select files</span>
+                  </div>
+                </ngx-dropzone-label>
+                <ngx-dropzone-preview *ngFor="let file of files" [removable]="true" (removed)="onRemove(file)">
+                  <ngx-dropzone-label>{{ file.name }} ({{ file.size / 1024 / 1024 | number:'1.2-2' }} MB)</ngx-dropzone-label>
+                </ngx-dropzone-preview>
+              </ngx-dropzone>
+              <small class="text-muted">Supported formats: JPG, PNG, GIF. Maximum file size: 10MB.</small>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary" routerLink="/investigator/cases">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Submit Case
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

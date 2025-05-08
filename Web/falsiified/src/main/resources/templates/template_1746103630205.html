@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --background-color: #f8f9fa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', system-ui, sans-serif;
+            line-height: 1.7;
+            color: #34495e;
+            background-color: var(--background-color);
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .report-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .report-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .report-metadata {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .metadata-item {
+            padding: 10px;
+        }
+
+        .metadata-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        .manipulation-found {
+            color: var(--danger-color);
+            font-weight: 600;
+            padding: 8px;
+            background-color: rgba(231, 76, 60, 0.1);
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .manipulation-not-found {
+            color: var(--success-color);
+            font-weight: 600;
+            padding: 8px;
+            background-color: rgba(46, 204, 113, 0.1);
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .image-container {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.02);
+        }
+
+        .image-caption {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .comments-section {
+            background-color: #f1f3f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .comment {
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .comment-meta {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        .download-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-NEXT button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-button:hover {
+            background-color: #2980b9;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background-color: white;
+            }
+            .header {
+                background: var(--primary-color);
+                box-shadow: none;
+            }
+            .section, .report-metadata {
+                box-shadow: none;
+                border: 1px solid #eee;
+            }
+            .download-button {
+                display: none;
+            }
+            .no-print {
+                display: none;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            .header {
+                padding: 20px;
+            }
+            .report-title {
+                font-size: 24px;
+            }
+            .metadata-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <div class="report-title">${title}</div>
+        <div class="report-subtitle">Advanced Image Falsification Analysis Report</div>
+    </div>
+
+    <div class="report-metadata">
+        <div class="metadata-grid">
+            <div class="metadata-item">
+                <div class="metadata-label">Case Number</div>
+                <div>${caseNumber}</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Analyzed on</div>
+                <div>${createdAt}</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Report ID</div>
+                <div>${id}</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Analyzed by</div>
+                <div>${expertName}</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Status</div>
+                <div>${status}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Executive Summary</div>
+        <p>${description}</p>
+        <p><strong>Conclusion: </strong>${conclusion}</p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Image Evidence</div>
+        <div class="image-container">
+            <img src="${imageUrl}" alt="Analyzed Image">
+            <p class="image-caption">Primary Image Evidence</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Manipulation Analysis</div>
+        ${detectedManipulations}
+    </div>
+
+    <div class="section">
+        <div class="section-title">Detailed Findings</div>
+        ${analysisResults}
+    </div>
+
+    <div class="comments-section">
+        <div class="section-title">Expert Analysis Notes</div>
+        ${comments}
+    </div>
+
+    <div class="footer">
+        <p>Generated on ${createdAt} | Report ID: ${id}</p>
+        <a href="#" class="download-button no-print">Download PDF</a>
+        <div class="download-NEXT no-print"><button>Download PDF</button></div>
+    </div>
+</body>
+</html>

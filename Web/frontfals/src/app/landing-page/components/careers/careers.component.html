@@ -1,0 +1,139 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">Join Our Team</h1>
+      <p class="page-description">
+        Help us build technology that protects the integrity of visual evidence
+      </p>
+      <a routerLink="/careers/positions" class="btn btn-light">View Open Positions</a>
+    </div>
+  </header>
+
+  <section class="mission-section">
+    <div class="container">
+      <div class="mission-content">
+        <div class="mission-image">
+          <img src="assets/images/careers/team-meeting.jpg" alt="FIDS team meeting">
+        </div>
+        <div class="mission-text">
+          <h2>Our Mission & Culture</h2>
+          <p>
+            At FIDS, we're building technology that helps legal professionals distinguish fact from fiction in visual evidence. Our work directly impacts the justice system, helping ensure that manipulated images don't lead to wrongful outcomes.
+          </p>
+          <p>
+            We're a diverse team of engineers, data scientists, forensic experts, and legal professionals united by our commitment to truth and justice. We value innovation, integrity, and impact in everything we do.
+          </p>
+          <p>
+            Our culture emphasizes collaboration, continuous learning, and work-life balance. We believe that the best ideas come from teams where everyone feels valued and empowered to contribute.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="benefits-section">
+    <div class="container">
+      <h2 class="section-title">Why Work With Us</h2>
+      <p class="section-description">
+        We offer competitive compensation and benefits designed to support your wellbeing and growth
+      </p>
+      <div class="benefits-grid">
+        <div class="benefit-card" *ngFor="let benefit of benefits">
+          <div class="benefit-icon">
+            <i class="material-icons">{{benefit.icon}}</i>
+          </div>
+          <h3 class="benefit-title">{{benefit.title}}</h3>
+          <p class="benefit-description">{{benefit.description}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="departments-section">
+    <div class="container">
+      <h2 class="section-title">Our Teams</h2>
+      <p class="section-description">
+        Explore the different departments that make up FIDS
+      </p>
+      <div class="departments-grid">
+        <div class="department-card" *ngFor="let department of departments">
+          <div class="department-image">
+            <img [src]="department.image" [alt]="department.name + ' team'">
+            <div class="department-positions">{{department.positions}} open positions</div>
+          </div>
+          <div class="department-content">
+            <h3 class="department-name">{{department.name}}</h3>
+            <p class="department-description">{{department.description}}</p>
+            <a [routerLink]="'/careers/departments/' + department.name.toLowerCase()" class="department-link">
+              Learn More
+              <i class="material-icons">arrow_forward</i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="positions-section">
+    <div class="container">
+      <h2 class="section-title">Open Positions</h2>
+      <p class="section-description">
+        Find your next career opportunity at FIDS
+      </p>
+      <div class="positions-list">
+        <div class="position-item" *ngFor="let position of openPositions">
+          <div class="position-info">
+            <h3 class="position-title">{{position.title}}</h3>
+            <div class="position-meta">
+              <span class="position-department">{{position.department}}</span>
+              <span class="position-location">{{position.location}}</span>
+              <span class="position-type">{{position.type}}</span>
+            </div>
+          </div>
+          <a [routerLink]="['/careers/positions', position.title | lowercase | slugify]" class="btn btn-outline">
+            View Details
+          </a>
+        </div>
+      </div>
+      <div class="positions-cta">
+        <a routerLink="/careers/positions" class="btn btn-primary">View All Positions</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials-section">
+    <div class="container">
+      <h2 class="section-title">Life at FIDS</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+          <div class="testimonial-content">
+            <div class="quote-icon">
+              <i class="material-icons">format_quote</i>
+            </div>
+            <p class="testimonial-quote">{{testimonial.quote}}</p>
+            <div class="testimonial-author">
+              <img [src]="testimonial.avatar" [alt]="testimonial.name" class="author-avatar">
+              <div class="author-info">
+                <h4 class="author-name">{{testimonial.name}}</h4>
+                <p class="author-role">{{testimonial.role}}</p>
+                <p class="author-years">{{testimonial.years}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Don't see the right position?</h2>
+        <p>
+          We're always looking for talented individuals to join our team. Send us your resume and we'll keep you in mind for future opportunities.
+        </p>
+        <a routerLink="/careers/general-application" class="btn btn-primary">Submit General Application</a>
+      </div>
+    </div>
+  </section>
+</div>

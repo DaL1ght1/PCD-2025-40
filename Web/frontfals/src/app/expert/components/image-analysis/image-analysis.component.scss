@@ -1,0 +1,316 @@
+@use 'sass:color';
+
+// Forensic theme variables
+:root {
+  --forensic-primary: #1a3a5f;
+  --forensic-secondary: #2c5282;
+  --forensic-accent: #d63031;
+  --forensic-light: #f8f9fa;
+  --forensic-dark: #343a40;
+  --forensic-success: #2ecc71;
+  --forensic-danger: #e74c3c;
+  --forensic-warning: #f39c12;
+  --forensic-info: #3498db;
+  --forensic-border: #dee2e6;
+  --forensic-shadow: rgba(0, 0, 0, 0.15);
+}
+
+.forensic-workspace {
+  padding: 20px;
+  background-color: #f2f6fc;
+  min-height: 100vh;
+}
+
+.forensic-header {
+  margin-bottom: 15px;
+
+  h2 {
+    color: var(--forensic-primary);
+    font-weight: 600;
+    border-left: 4px solid var(--forensic-accent);
+    padding-left: 15px;
+  }
+}
+
+.forensic-card-header {
+  background-color: var(--forensic-primary);
+  color: white;
+  font-weight: 500;
+  border-bottom: 3px solid var(--forensic-accent);
+
+  h5 {
+    margin-bottom: 0;
+    font-size: 1.1rem;
+  }
+}
+
+// Cards styling
+.case-card, .evidence-card, .analysis-card, .case-details-card, .placeholder-card {
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px var(--forensic-shadow);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+// Case list styling
+.case-list {
+  .list-group-item {
+    border-left: none;
+    border-right: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f5f9ff;
+    }
+
+    &.active {
+      background-color: #e5eeff;
+      color: var(--forensic-primary);
+      border-color: var(--forensic-border);
+      border-left: 4px solid var(--forensic-accent);
+    }
+
+    .case-number {
+      font-size: 0.8rem;
+      color: #6c757d;
+      background-color: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+  }
+}
+
+// Case details styling
+.case-description {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 4px solid var(--forensic-info);
+}
+
+.case-metadata {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 4px solid var(--forensic-secondary);
+
+  p {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+}
+
+// Evidence list styling
+.evidence-list {
+  .list-group-item {
+    border-left: none;
+    border-right: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f5f9ff;
+    }
+
+    &.active {
+      background-color: #e5eeff;
+      color: var(--forensic-primary);
+      border-color: var(--forensic-border);
+      border-left: 4px solid var(--forensic-info);
+    }
+  }
+}
+
+// Image thumbnails
+.image-thumbnail {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid #eaeaea;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Image preview styling
+.image-preview {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid var(--forensic-border);
+  position: relative;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #f8f9fa;
+  }
+
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 70%, rgba(0,0,0,0.3));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 10px;
+
+    .image-controls {
+      .btn {
+        opacity: 0.8;
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  &:hover .image-overlay {
+    opacity: 1;
+  }
+}
+
+// Evidence details styling
+.evidence-details {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+
+  h6 {
+    color: var(--forensic-secondary);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .detail-item {
+    display: flex;
+    margin-bottom: 8px;
+
+    .detail-label {
+      min-width: 110px;
+      font-weight: 500;
+      color: var(--forensic-dark);
+    }
+
+    .detail-value {
+      color: #495057;
+    }
+  }
+}
+
+// Analysis results styling
+.analysis-results {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.analysis-result {
+  padding: 12px;
+  border: 1px solid var(--forensic-border);
+  border-left: 4px solid var(--forensic-secondary);
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .analysis-type {
+    font-weight: 600;
+    display: block;
+    color: var(--forensic-secondary);
+  }
+
+  .analysis-date {
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+
+  .confidence-score {
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .view-details-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--forensic-secondary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Button styling
+.btn-analysis {
+  background-color: var(--forensic-secondary);
+  color: white;
+  border: none;
+  transition: all 0.2s ease;
+
+  // Fixed: Replaced darken() with color.adjust to address deprecation warning
+  &:hover {
+    background-color: color.adjust(#2c5282, $lightness: -5%);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+}
+
+// Empty state styling
+.no-evidence, .no-analysis {
+  color: #6c757d;
+  padding: 20px;
+
+  i {
+    opacity: 0.7;
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+
+  .small {
+    font-size: 0.8rem;
+  }
+}
+
+.placeholder-card {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+
+  i {
+    opacity: 0.3;
+    margin-bottom: 20px;
+  }
+}

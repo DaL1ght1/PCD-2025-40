@@ -1,0 +1,307 @@
+<div class="cases-container">
+  <!-- Loading overlay -->
+  <div class="loading-overlay" *ngIf="isLoading || isProcessing">
+    <div class="spinner"></div>
+    <p>{{ isLoading ? 'Loading cases...' : 'Processing...' }}</p>
+  </div>
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Case Management</h1>
+      <div class="case-count">
+        <span class="count">{{ totalElements }}</span>
+        <span class="label">{{ totalElements === 1 ? 'case' : 'cases' }}</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button
+        *ngIf="selectedCases.length > 0"
+        class="bulk-delete-btn"
+        (click)="bulkDeleteCases()"
+        matTooltip="Delete selected cases">
+        <i class="fas fa-trash-alt"></i>
+        Delete Selected ({{ selectedCases.length }})
+      </button>
+
+      <button
+        class="add-case-btn"
+        (click)="openCaseForm()"
+        matTooltip="Create new case">
+        <i class="fas fa-plus"></i>
+        New Case
+      </button>
+    </div>
+  </div>
+
+  <!-- Search and filters -->
+  <div class="toolbar">
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search cases by title, number, or description..."
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()">
+      <button class="search-btn" (click)="onSearch()">
+        <i class="fas fa-search"></i>
+      </button>
+      <button *ngIf="searchQuery" class="clear-btn" (click)="clearSearch()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="toolbar-actions">
+      <button
+        class="view-toggle-btn"
+        (click)="toggleViewMode()"
+        [matTooltip]="viewMode === 'grid' ? 'Switch to list view' : 'Switch to grid view'">
+        <i class="fas" [ngClass]="viewMode === 'grid' ? 'fa-list' : 'fa-th-large'"></i>
+      </button>
+
+      <button
+        class="filter-btn"
+        [matMenuTriggerFor]="filterMenu"
+        matTooltip="Filter cases">
+        <i class="fas fa-filter"></i>
+        <span class="filter-badge" *ngIf="Object.keys(activeFilters).length > 0">
+          {{ Object.keys(activeFilters).length }}
+        </span>
+      </button>
+
+      <mat-menu #filterMenu="matMenu" class="filter-menu">
+        <app-case-filter
+          [activeFilters]="activeFilters"
+          (filterChange)="onFilterChange($event)">
+        </app-case-filter>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Grid view -->
+  <div class="cases-grid" *ngIf="viewMode === 'grid' && !isLoading">
+    <div class="case-card"
+         *ngFor="let case of filteredCases"
+         [class.selected]="isCaseSelected(case.id)"
+         (click)="viewCaseDetails(case.id)">
+
+      <div class="card-header">
+        <div class="checkbox-wrapper" (click)="toggleCaseSelection(case.id, $event)">
+          <div class="custom-checkbox">
+            <input
+              type="checkbox"
+              [id]="'select-' + case.id"
+              [checked]="isCaseSelected(case.id)">
+            <span class="checkbox-display"></span>
+          </div>
+        </div>
+
+        <div class="case-number">{{ case.caseNumber }}</div>
+
+        <div class="card-actions">
+          <button
+            class="action-btn edit-btn"
+            matTooltip="Edit Case"
+            (click)="openCaseForm(case); $event.stopPropagation()">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button
+            class="action-btn delete-btn"
+            matTooltip="Delete Case"
+            (click)="deleteCase(case, $event)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <h3 class="case-title">{{ case.title }}</h3>
+
+        <div class="case-meta">
+          <div class="meta-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>{{ case.createdAt | date:'MMM d, y' }}</span>
+          </div>
+
+          <div class="meta-item">
+            <i class="fas fa-user"></i>
+            <span>{{ case.investigatorId }}</span>
+          </div>
+        </div>
+
+        <p class="case-description">{{ case.description | slice:0:120 }}{{ case.description?.length > 120 ? '...' : '' }}</p>
+
+        <div class="case-stats">
+          <div class="stat-item">
+            <i class="fas fa-image"></i>
+            <span>{{ case.imageIds?.length || 0 }} {{ (case.imageIds?.length || 0) === 1 ? 'Image' : 'Images' }}</span>
+          </div>
+
+          <div class="stat-item">
+            <i class="fas fa-file-alt"></i>
+            <span>{{ case.analysisIds?.length || 0 }} {{ (case.analysisIds?.length || 0) === 1 ? 'Analysis' : 'Analyses' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="status-badge" [ngClass]="getStatusClass(case.status)">
+          {{ case.status }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state for grid view -->
+    <div class="empty-state" *ngIf="filteredCases.length === 0">
+      <i class="fas fa-folder-open empty-icon"></i>
+      <h2 class="empty-title">No cases found</h2>
+      <p class="empty-description">
+        {{ searchQuery || Object.keys(activeFilters).length > 0 ?
+        'No cases match your search criteria. Try adjusting your filters.' :
+        'There are no cases in the system yet.' }}
+      </p>
+      <button class="add-case-btn" (click)="openCaseForm()">
+        <i class="fas fa-plus"></i>
+        Create New Case
+      </button>
+    </div>
+  </div>
+
+  <!-- List view -->
+  <div class="cases-list-container" *ngIf="viewMode === 'list' && !isLoading">
+    <table class="cases-table">
+      <thead>
+      <tr>
+        <th class="checkbox-column">
+          <div class="custom-checkbox">
+            <input
+              type="checkbox"
+              id="selectAll"
+              [checked]="selectedCases.length === filteredCases.length && filteredCases.length > 0"
+              (change)="selectAllCases()">
+            <span class="checkbox-display"></span>
+          </div>
+        </th>
+        <th class="sortable-column" (click)="setSorting('caseNumber')">
+          Case Number
+          <i class="fas fa-sort" [ngClass]="getSortIcon('caseNumber')"></i>
+        </th>
+        <th class="sortable-column" (click)="setSorting('title')">
+          Title
+          <i class="fas fa-sort" [ngClass]="getSortIcon('title')"></i>
+        </th>
+        <th class="sortable-column" (click)="setSorting('status')">
+          Status
+          <i class="fas fa-sort" [ngClass]="getSortIcon('status')"></i>
+        </th>
+        <th class="sortable-column" (click)="setSorting('createdAt')">
+          Created At
+          <i class="fas fa-sort" [ngClass]="getSortIcon('createdAt')"></i>
+        </th>
+        <th class="sortable-column" (click)="setSorting('investigatorId')">
+          Investigator
+          <i class="fas fa-sort" [ngClass]="getSortIcon('investigatorId')"></i>
+        </th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let case of filteredCases"
+          [class.selected]="isCaseSelected(case.id)"
+          (click)="viewCaseDetails(case.id)">
+        <td class="checkbox-column" (click)="toggleCaseSelection(case.id, $event)">
+          <div class="custom-checkbox">
+            <input
+              type="checkbox"
+              [id]="'list-select-' + case.id"
+              [checked]="isCaseSelected(case.id)">
+            <span class="checkbox-display"></span>
+          </div>
+        </td>
+        <td class="case-number">{{ case.caseNumber }}</td>
+        <td class="case-title">{{ case.title }}</td>
+        <td>
+          <div class="status-badge" [ngClass]="getStatusClass(case.status)">
+            {{ case.status }}
+          </div>
+        </td>
+        <td>{{ case.createdAt | date:'MMM d, y' }}</td>
+        <td>{{ case.investigatorId }}</td>
+        <td class="actions-cell">
+          <button
+            class="action-btn edit-btn"
+            matTooltip="Edit Case"
+            (click)="openCaseForm(case); $event.stopPropagation()">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button
+            class="action-btn delete-btn"
+            matTooltip="Delete Case"
+            (click)="deleteCase(case, $event)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty state for list view -->
+    <div class="empty-state" *ngIf="filteredCases.length === 0">
+      <i class="fas fa-folder-open empty-icon"></i>
+      <h2 class="empty-title">No cases found</h2>
+      <p class="empty-description">
+        {{ searchQuery || Object.keys(activeFilters).length > 0 ?
+        'No cases match your search criteria. Try adjusting your filters.' :
+        'There are no cases in the system yet.' }}
+      </p>
+      <button class="add-case-btn" (click)="openCaseForm()">
+        <i class="fas fa-plus"></i>
+        Create New Case
+      </button>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <div class="pagination-info">
+      Showing {{ filteredCases.length }} cases (page {{ currentPage }} of {{ totalPages }})
+    </div>
+
+    <div class="pagination-controls">
+      <button
+        class="page-btn"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(1)"
+        matTooltip="First page">
+        <i class="fas fa-angle-double-left"></i>
+      </button>
+      <button
+        class="page-btn"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+        matTooltip="Previous page">
+        <i class="fas fa-angle-left"></i>
+      </button>
+
+      <div class="page-indicator">
+        Page {{ currentPage }} of {{ totalPages }}
+      </div>
+
+      <button
+        class="page-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+        matTooltip="Next page">
+        <i class="fas fa-angle-right"></i>
+      </button>
+      <button
+        class="page-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(totalPages)"
+        matTooltip="Last page">
+        <i class="fas fa-angle-double-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

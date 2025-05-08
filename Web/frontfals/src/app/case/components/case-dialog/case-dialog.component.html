@@ -1,0 +1,112 @@
+<h2 mat-dialog-title>{{ mode === 'view' ? 'View Case' : 'Edit Case' }}</h2>
+<mat-dialog-content>
+  <!-- Add a loading indicator if needed -->
+  <div *ngIf="isLoading" class="text-center my-3">Loading case data...</div>
+
+  <!-- Display case data and form fields when data is loaded -->
+  <div *ngIf="!isLoading && caseData">
+    <!-- Display Case Number and Creation Date always -->
+    <div class="mb-3">
+      <label class="form-label">Case Number</label>
+      <input matInput [value]="caseData.caseNumber" readonly>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Created At</label>
+      <input matInput [value]="caseData.createdAt | date:'medium'" readonly>
+    </div>
+    <div class="mb-3" *ngIf="caseData.updatedAt !== caseData.createdAt">
+      <label class="form-label">Updated At</label>
+      <input matInput [value]="caseData.updatedAt | date:'medium'" readonly>
+    </div>
+    <div class="mb-3" *ngIf="caseData.closedAt">
+      <label class="form-label">Closed At</label>
+      <input matInput [value]="caseData.closedAt | date:'medium'" readonly>
+    </div>
+
+
+    <form [formGroup]="caseForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title">
+        <mat-error *ngIf="f['title'].errors?.['minlength']">Title must be at least 3 characters</mat-error>
+        <mat-error *ngIf="f['title'].errors?.['maxlength']">Title cannot exceed 100 characters</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+        <mat-error *ngIf="f['description'].errors?.['maxlength']">Description cannot exceed 2000 characters</mat-error>
+      </mat-form-field>
+
+      <!-- These fields are NOT in CaseDTO, so remove them or note they are not available -->
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Incident Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="incidentDate">
+        <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="mode !== 'view'"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Location</mat-label>
+        <input matInput formControlName="location">
+      </mat-form-field>
+       <mat-form-field appearance="fill">
+        <mat-label>Additional Notes</mat-label>
+        <textarea matInput formControlName="additionalNotes"></textarea>
+      </mat-form-field> -->
+
+      <mat-form-field appearance="fill">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <!-- Iterate over CaseStatus enum keys -->
+          <mat-option *ngFor="let statusKey of CaseStatus | keyvalue" [value]="statusKey.value">
+            {{ statusKey.value | titlecase }} <!-- Use value and format for display -->
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="f['status'].errors?.['required']">Status is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Investigator ID</mat-label>
+        <input matInput [value]="caseData.investigatorId" readonly> <!-- InvestigatorId is not updated -->
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Assigned Expert ID</mat-label>
+        <input matInput formControlName="assignedExpertId"> <!-- Can be updated -->
+      </mat-form-field>
+
+      <!-- Add fields for Verdict and Judicial Notes if applicable for update status -->
+      <mat-form-field appearance="fill" *ngIf="caseForm.get('status')?.value === CaseStatus.COMPLETED">
+        <mat-label>Verdict</mat-label>
+        <input matInput formControlName="verdict">
+        <!-- Validators for verdict if needed -->
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" *ngIf="caseForm.get('status')?.value === CaseStatus.COMPLETED">
+        <mat-label>Judicial Notes</mat-label>
+        <textarea matInput formControlName="judicialNotes"></textarea>
+        <mat-error *ngIf="f['judicialNotes'].errors?.['maxlength']">Judicial Notes cannot exceed 2000 characters</mat-error>
+      </mat-form-field>
+
+      <!-- Display Image IDs and Analysis IDs if needed -->
+      <div class="mb-3" *ngIf="caseData.imageIds?.length > 0">
+        <label class="form-label">Image IDs</label>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let imageId of caseData.imageIds">{{ imageId }}</li>
+        </ul>
+      </div>
+
+      <div class="mb-3" *ngIf="caseData.analysisIds?.length > 0">
+        <label class="form-label">Analysis IDs</label>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let analysisId of caseData.analysisIds">{{ analysisId }}</li>
+        </ul>
+      </div>
+
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()" *ngIf="mode === 'view'">Close</button>
+  <button mat-button (click)="dialogRef.close()" *ngIf="mode === 'edit'">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()" *ngIf="mode === 'edit'" [disabled]="caseForm.invalid">Save</button>
+</mat-dialog-actions>

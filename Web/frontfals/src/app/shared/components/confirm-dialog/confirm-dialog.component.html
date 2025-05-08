@@ -1,0 +1,23 @@
+<div class="confirmation-dialog">
+  <div class="dialog-header">
+    <h2 class="dialog-title">{{ data.title }}</h2>
+    <button class="close-btn" (click)="dialogRef.close(false)" aria-label="Close dialog">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <p class="dialog-message">{{ data.message }}</p>
+
+    <div *ngIf="data.detail" class="dialog-detail">
+      {{ data.detail }}
+    </div>
+  </div>
+
+  <div class="dialog-actions">
+    <button class="btn-cancel" (click)="dialogRef.close(false)">{{ data.cancelText || 'Cancel' }}</button>
+    <button class="btn-confirm" [ngClass]="data.confirmClass || 'btn-danger'" (click)="dialogRef.close(true)">
+      {{ data.confirmText || 'Confirm' }}
+    </button>
+  </div>
+</div>

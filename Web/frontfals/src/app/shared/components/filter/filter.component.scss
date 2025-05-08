@@ -1,0 +1,38 @@
+.filter-container {
+  margin-bottom: 15px;
+  border: 1px solid var(--gray-light-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+
+  h6 {
+    font-weight: 500;
+    color: var(--dark-color);
+  }
+
+  i {
+    font-size: 0.8rem;
+    color: var(--gray-color);
+  }
+}
+
+.filter-body {
+  padding: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+  transition: max-height 0.3s ease;
+
+  &.collapsed {
+    max-height: 0;
+    padding: 0 15px;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,22 @@
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  overflow: hidden;
+
+  img {
+    max-width: 100%;
+    max-height: 600px;
+    object-fit: contain;
+  }
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}

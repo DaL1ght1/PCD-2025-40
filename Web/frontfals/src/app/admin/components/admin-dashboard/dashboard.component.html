@@ -1,0 +1,184 @@
+<!-- dashboard.component.html -->
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Role Analytics Dashboard</h1>
+    <div class="timeframe-selector">
+      <span>Time Period:</span>
+      <div class="btn-group" role="group">
+        <button [class.active]="selectedTimeframe === 'week'" class="btn btn-outline-primary" (click)="changeTimeframe('week')">Week</button>
+        <button [class.active]="selectedTimeframe === 'month'" class="btn btn-outline-primary" (click)="changeTimeframe('month')">Month</button>
+        <button [class.active]="selectedTimeframe === 'year'" class="btn btn-outline-primary" (click)="changeTimeframe('year')">Year</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="dashboard-content" [class.blurred]="loading">
+    <!-- First Row -->
+    <div class="row">
+      <!-- Role Distribution Chart -->
+      <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">User Role Distribution</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="roleDistributionChart"></canvas>
+            </div>
+            <div class="chart-description mt-3">
+              <p>Distribution of users across different roles in the system</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role Comparison Chart -->
+      <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Role Performance Metrics</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="roleComparisonChart"></canvas>
+            </div>
+            <div class="chart-description mt-3">
+              <p>Performance metrics comparison across different user roles</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row -->
+    <div class="row">
+      <!-- Role Activity Over Time -->
+      <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Role Activity Over Time</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="roleActivityChart"></canvas>
+            </div>
+            <div class="chart-description mt-3">
+              <p>Activity levels for each role over the selected time period</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cases By Role -->
+      <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Cases Handled By Role</h6>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="casesByRoleChart"></canvas>
+            </div>
+            <div class="chart-description mt-3">
+              <p>Number of cases handled by each role</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Third Row - Role Summaries -->
+    <div class="row">
+      <!-- Admin Overview -->
+      <div class="col-xl col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Admins</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{userRoleData?.roleDistribution?.admin || 0}}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-user-shield fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expert Overview -->
+      <div class="col-xl col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Experts</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{userRoleData?.roleDistribution?.expert || 0}}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-microscope fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Investigator Overview -->
+      <div class="col-xl col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Investigators</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{userRoleData?.roleDistribution?.investigator || 0}}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-search fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lawyer Overview -->
+      <div class="col-xl col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Lawyers</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{userRoleData?.roleDistribution?.lawyer || 0}}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-balance-scale fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Judge Overview -->
+      <div class="col-xl col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Judges</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{userRoleData?.roleDistribution?.judge || 0}}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-gavel fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

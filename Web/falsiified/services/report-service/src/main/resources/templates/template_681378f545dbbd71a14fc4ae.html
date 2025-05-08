@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}">Default Report Title</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.7;
+            color: #34495e;
+            background-color: #f8f9fa;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .report-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .report-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .report-metadata {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .metadata-item {
+            padding: 10px;
+        }
+
+        .metadata-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #3498db;
+        }
+
+        .manipulation-found {
+            color: #e74c3c;
+            font-weight: 600;
+            padding: 8px;
+            background-color: #f9e6e6;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .manipulation-not-found {
+            color: #2ecc71;
+            font-weight: 600;
+            padding: 8px;
+            background-color: #e6f5e6;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .image-container {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .image-caption {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .analysis-details {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .comments-section {
+            background-color: #f1f3f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .comment {
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .comment-meta {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 8px;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        /* Class to mark where images should be placed */
+        .image-placeholder {
+            width: 100%;
+            height: 10px;
+            margin: 20px 0;
+            text-align: center;
+            page-break-before: auto;
+            page-break-after: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="report-title" th:text="${title}">Default Report Title</div>
+    <div class="report-subtitle">Advanced Image Falsification Analysis Report</div>
+</div>
+
+<div class="report-metadata">
+    <div class="metadata-grid">
+        <div class="metadata-item">
+            <div class="metadata-label">Report ID</div>
+            <div th:text="${id}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Case Number</div>
+            <div th:text="${caseNumber}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Case ID</div>
+            <div th:text="${caseId}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Report Type</div>
+            <div th:text="${reportType}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Status</div>
+            <div th:text="${status}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Analyzed on</div>
+            <div th:text="${createdAt}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Generated by</div>
+            <div th:text="${generatedBy}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Investigator ID</div>
+            <div th:text="${investigatorId}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Expert ID</div>
+            <div th:text="${expertId}">N/A</div>
+        </div>
+        <div class="metadata-item">
+            <div class="metadata-label">Expert Name</div>
+            <div th:text="${expertName}">N/A</div>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-title">Executive Summary</div>
+    <p th:text="${description}">No description available</p>
+    <p><strong>Conclusion: </strong><span th:text="${conclusion}">N/A</span></p>
+</div>
+
+<div class="section">
+    <div class="section-title">Detailed Findings</div>
+    <div th:each="analysis : ${analysesWithImages}" class="analysis-details">
+        <p><strong>Analysis ID:</strong> <span th:text="${analysis.id}">N/A</span></p>
+        <p><strong>Image ID:</strong> <span th:text="${analysis.imageId}">N/A</span></p>
+        <p>
+            <strong>Falsified:</strong>
+            <span th:if="${analysis.isFalsified != null and analysis.isFalsified}" class="manipulation-found">Yes</span>
+            <span th:if="${analysis.isFalsified != null and !analysis.isFalsified}" class="manipulation-not-found">No</span>
+            <span th:if="${analysis.isFalsified == null}">N/A</span>
+        </p>
+        <p><strong>Confidence Score:</strong> <span th:text="${analysis.confidenceScore != null ? analysis.confidenceScore + '%' : 'N/A'}">N/A</span></p>
+        <p><strong>Analysis Type:</strong> <span th:text="${analysis.analysisType}">N/A</span></p>
+        <p><strong>Analyzed By:</strong> <span th:text="${analysis.analyzedBy}">N/A</span></p>
+
+        <!-- Note: The images will be added programmatically after HTML processing -->
+        <div class="image-placeholder"></div>
+    </div>
+    <div th:if="${#lists.isEmpty(analysesWithImages)}">
+        <p>No analysis results available.</p>
+    </div>
+</div>
+
+<div class="comments-section">
+    <div class="section-title">Expert Analysis Notes</div>
+    <div th:utext="${judicialNotes}">No comments available</div>
+</div>
+
+<div class="footer">
+    <p>Generated on <span th:text="${createdAt}">N/A</span> | Report ID: <span th:text="${id}">N/A</span></p>
+</div>
+</body>
+</html>

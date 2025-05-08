@@ -1,0 +1,16 @@
+.pagination {
+  .page-item {
+    &.active .page-link {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: white;
+    }
+    &.disabled .page-link {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+  .page-link {
+    cursor: pointer;
+  }
+}

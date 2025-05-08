@@ -1,0 +1,55 @@
+<div class="activation-container">
+  <div class="activation-card">
+    <div class="card-header">
+      <h2>Account Activation</h2>
+      <p>Enter the 6-digit code sent to your email</p>
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="activationForm" (ngSubmit)="onSubmit()" (paste)="onPaste($event)">
+        <div class="code-inputs">
+          <div class="input-container" *ngFor="let digit of [1,2,3,4,5,6]; let i = index">
+            <input
+              type="text"
+              maxlength="1"
+              [formControlName]="'digit' + digit"
+              (input)="restrictToNumbers($event, i)"
+              (keyup)="onDigitInput($event, i)"
+              #inputRef
+              (focus)="inputRef.select()"
+              [ngClass]="{ 'is-invalid': submitted && activationForm.get('digit' + digit)?.errors }"
+              autocomplete="off"
+              inputmode="numeric"
+              [attr.tabindex]="i + 1"
+              (keydown.arrowRight)="i < 5 ? codeInputs[i + 1].focus() : null"
+              (keydown.arrowLeft)="i > 0 ? codeInputs[i - 1].focus() : null"
+            >
+          </div>
+        </div>
+
+        <div *ngIf="error" class="alert alert-danger mt-3">
+          {{ error }}
+        </div>
+
+        <div *ngIf="success" class="alert alert-success mt-3">
+          {{ success }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-activate" [disabled]="loading">
+            <span *ngIf="loading" class="spinner"></span>
+            <span *ngIf="!loading">Activate Account</span>
+          </button>
+
+          <button type="button" class="btn-resend" (click)="resendCode()" [disabled]="loading">
+            Resend Code
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card-footer">
+      <p>Didn't receive the code? Check your spam folder or <a routerLink="/auth/register">register again</a>.</p>
+    </div>
+  </div>
+</div>

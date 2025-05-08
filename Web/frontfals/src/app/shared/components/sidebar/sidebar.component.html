@@ -1,0 +1,171 @@
+<div class="sidebar" [class.expanded]="isExpanded" [class.mobile-open]="isMobileOpen">
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <div class="logo">
+        <button
+          class="toolbar-toggle-btn"
+          (click)="toggleSidebar()"
+          matTooltip="Toggle Sidebar"
+          aria-label="Toggle sidebar navigation"
+        >
+          <i class="fas fa-shield-alt"></i>
+        </button>
+      </div>
+      <span class="logo-text">FIDS</span>
+    </div>
+    <button class="toggle-button" (click)="toggleSidebar()" *ngIf="!isMobile">
+      <i class="fas" [ngClass]="isExpanded ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
+    </button>
+  </div>
+
+  <div class="sidebar-content">
+    <div class="user-info" *ngIf="currentUser">
+      <div class="user-avatar">
+        <span>{{ getUserInitials() }}</span>
+      </div>
+      <div class="user-details">
+        <h4 class="user-name">{{ currentUser?.firstname }} {{ currentUser?.lastname }}</h4>
+        <span class="user-role">{{ formatRole(currentUser?.role?.[0] || '') }}</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <!-- Role-specific menu sections -->
+      <div class="menu-section" *ngIf="hasRole('ROLE_ADMIN')">
+        <h5 class="menu-title">Administration</h5>
+        <ul class="menu-items">
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/admin/users">
+              <i class="fas fa-users"></i>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/admin/stats">
+              <i class="fas fa-chart-bar"></i>
+              <span>System Statistics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="menu-section" *ngIf="hasRole('ROLE_EXPERT')">
+        <h5 class="menu-title">Expert Tools</h5>
+        <ul class="menu-items">
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/expert/analysis">
+              <i class="fas fa-microscope"></i>
+              <span>Image Analysis</span>
+            </a>
+          </li>
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/expert/reports">
+              <i class="fas fa-file-signature"></i>
+              <span>Expert Reports</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="menu-section" *ngIf="hasRole('ROLE_INVESTIGATOR')">
+        <h5 class="menu-title">Investigation</h5>
+        <ul class="menu-items">
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/investigator/submit">
+              <i class="fas fa-plus-circle"></i>
+              <span>Submit Case</span>
+            </a>
+          </li>
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/cases">
+              <i class="fas fa-folder"></i>
+              <span>Cases</span>
+            </a>
+          </li>
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/images">
+              <i class="fas fa-images"></i>
+              <span>Images</span>
+            </a>
+          </li>
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/investigator/cases">
+              <i class="fas fa-search"></i>
+              <span>My Investigations</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <div class="menu-section" *ngIf="hasRole('ROLE_LAWYER')">
+        <h5 class="menu-title">Legal</h5>
+        <ul class="menu-items">
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/lawyer/cases">
+              <i class="fas fa-balance-scale"></i>
+              <span>Legal Cases</span>
+            </a>
+          </li>
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/lawyer/documents">
+              <i class="fas fa-file-contract"></i>
+              <span>Legal Documents</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="menu-section" *ngIf="hasRole('ROLE_JUDGE')">
+        <h5 class="menu-title">Judicial</h5>
+        <ul class="menu-items">
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/judge/reports">
+              <i class="fas fa-gavel"></i>
+              <span>Case Review</span>
+            </a>
+          </li>
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/judge/decisions">
+              <i class="fas fa-stamp"></i>
+              <span>Judicial Decisions</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="menu-section">
+        <h5 class="menu-title">Settings</h5>
+        <ul class="menu-items">
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/profile">
+              <i class="fas fa-user"></i>
+              <span>My Profile</span>
+            </a>
+          </li>
+          <li class="menu-item" routerLinkActive="active">
+            <a routerLink="/settings">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="javascript:void(0)" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="theme-toggle">
+      <app-theme-toggle></app-theme-toggle>
+    </div>
+    <div class="version">v1.0.0</div>
+  </div>
+</div>
+
+<div class="sidebar-overlay" [class.active]="isMobileOpen" (click)="closeMobileSidebar()"></div>

@@ -1,0 +1,106 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">Documentation</h1>
+      <p class="page-description">
+        Comprehensive guides and resources to help you get the most out of FIDS
+      </p>
+      <div class="search-container">
+        <div class="search-box">
+          <i class="material-icons">search</i>
+          <input type="text" placeholder="Search documentation...">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="docs-categories">
+    <div class="container">
+      <div class="categories-grid">
+        <div class="category-card" *ngFor="let category of categories">
+          <div class="category-icon">
+            <i class="material-icons">{{category.icon}}</i>
+          </div>
+          <h2 class="category-title">{{category.title}}</h2>
+          <ul class="doc-links">
+            <li *ngFor="let doc of category.docs">
+              <a [routerLink]="doc.link">{{doc.title}}</a>
+            </li>
+          </ul>
+          <a [routerLink]="'/docs/categories/' + category.title.toLowerCase().replace(' ', '-')" class="view-all">
+            View All
+            <i class="material-icons">arrow_forward</i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="popular-articles">
+    <div class="container">
+      <h2 class="section-title">Popular Articles</h2>
+      <div class="articles-grid">
+        <a [routerLink]="article.link" class="article-card" *ngFor="let article of popularArticles">
+          <div class="article-content">
+            <h3 class="article-title">{{article.title}}</h3>
+            <div class="article-meta">
+              <span class="article-type">Guide</span>
+              <span class="article-read-time">5 min read</span>
+            </div>
+          </div>
+          <i class="material-icons">arrow_forward</i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="docs-resources">
+    <div class="container">
+      <div class="resources-grid">
+        <div class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">school</i>
+          </div>
+          <h3>Video Tutorials</h3>
+          <p>Step-by-step video guides to help you master FIDS features</p>
+          <a routerLink="/docs/videos" class="btn btn-outline">
+            Watch Tutorials
+          </a>
+        </div>
+        <div class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">download</i>
+          </div>
+          <h3>Downloadable Resources</h3>
+          <p>User manuals, checklists, and reference guides</p>
+          <a routerLink="/docs/downloads" class="btn btn-outline">
+            View Downloads
+          </a>
+        </div>
+        <div class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">code</i>
+          </div>
+          <h3>API Reference</h3>
+          <p>Complete API documentation for developers</p>
+          <a routerLink="/api" class="btn btn-outline">
+            Explore API
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Need personalized help?</h2>
+        <p>Our support team is ready to assist you with any questions or issues.</p>
+        <div class="cta-buttons">
+          <a routerLink="/support" class="btn btn-primary">Contact Support</a>
+          <a routerLink="/docs/faq" class="btn btn-outline">View FAQs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

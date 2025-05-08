@@ -1,0 +1,46 @@
+<header class="header">
+  <div class="container-fluid">
+    <div class="header-content">
+      <div class="logo">
+        <a routerLink="/dashboard">
+          <span class="logo-text">Falsified Image Detection</span>
+        </a>
+      </div>
+
+      <div class="header-right">
+        <div class="notifications">
+          <div class="dropdown">
+            <button class="btn btn-link dropdown-toggle" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-bell"></i>
+              <span class="badge bg-danger">3</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+              <li><h6 class="dropdown-header">Notifications</h6></li>
+              <li><a class="dropdown-item" href="#">New case assigned</a></li>
+              <li><a class="dropdown-item" href="#">Analysis completed</a></li>
+              <li><a class="dropdown-item" href="#">Report ready for review</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">View all notifications</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="user-profile">
+          <div class="dropdown">
+            <button class="btn btn-link dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="user-name">{{ currentUser?.firstname }} {{ currentUser?.lastname }}</span>
+              <span class="user-role badge bg-secondary">{{ currentUser?.role?.[0] ?? 'Unknown' }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
+              <li><a class="dropdown-item" routerLink="/settings">Settings</a></li>
+              <li><a class="dropdown-item" routerLink="/images">Images</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item" (click)="logout()">Logout</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

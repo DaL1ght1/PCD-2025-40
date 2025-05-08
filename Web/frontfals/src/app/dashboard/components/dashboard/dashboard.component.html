@@ -1,0 +1,143 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="header-content">
+        <h1>Dashboard</h1>
+        <div class="header-actions">
+        </div>
+      </div>
+    </div>
+  </header>
+  <div *ngIf="loading" class="text-center my-5">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+
+  <div *ngIf="!loading" class="dashboard-content">
+    <!-- Stats Cards -->
+    <div class="row">
+      <!-- Admin Stats -->
+      <ng-container *ngIf="(userRoles$ | async) as roles">
+        <ng-container *ngIf="roles.includes('ADMIN')">
+          <div class="col-md-3 col-sm-6">
+            <app-stat-card
+              title="Total Users"
+              [value]="stats.totalUsers"
+              icon="fas fa-users"
+              color="primary">
+            </app-stat-card>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <app-stat-card
+              title="Total Cases"
+              [value]="stats.totalCases"
+              icon="fas fa-folder-open"
+              color="info">
+            </app-stat-card>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <app-stat-card
+              title="Total Images"
+              [value]="stats.totalImages"
+              icon="fas fa-images"
+              color="success">
+            </app-stat-card>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <app-stat-card
+              title="Total Analyses"
+              [value]="stats.totalAnalyses"
+              icon="fas fa-microscope"
+              color="warning">
+            </app-stat-card>
+          </div>
+        </ng-container>
+
+        <!-- User Stats -->
+        <ng-container *ngIf="!roles.includes('ADMIN')">
+          <div class="col-md-3 col-sm-6">
+            <app-stat-card
+              title="Total Cases"
+              [value]="stats.totalCases"
+              icon="fas fa-folder-open"
+              color="primary">
+            </app-stat-card>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <app-stat-card
+              title="Pending Cases"
+              [value]="stats.pendingCases"
+              icon="fas fa-clock"
+              color="warning">
+            </app-stat-card>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <app-stat-card
+              title="In Progress"
+              [value]="stats.inProgressCases"
+              icon="fas fa-spinner"
+              color="info">
+            </app-stat-card>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <app-stat-card
+              title="Completed"
+              [value]="stats.completedCases"
+              icon="fas fa-check-circle"
+              color="success">
+            </app-stat-card>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <!-- Charts and Recent Cases -->
+    <div class="row mt-4">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Recent Activity</h5>
+            <div class="dropdown">
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Last 7 Days
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                <li><a class="dropdown-item" href="#">Last 90 Days</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-body">
+            <app-activity-chart></app-activity-chart>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Case Status</h5>
+          </div>
+          <div class="card-body">
+            <app-case-status-chart></app-case-status-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Cases -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Recent Cases</h5>
+            <a routerLink="/cases" class="btn btn-sm btn-primary">View All</a>
+          </div>
+          <div class="card-body">
+            <app-recent-cases [cases]="recentCases"></app-recent-cases>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

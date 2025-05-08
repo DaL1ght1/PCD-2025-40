@@ -1,0 +1,56 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    sql:
+      init:
+        mode: always
+    liquibase:
+      enabled: false
+  flyway:
+      baseline-on-migrate: true
+  rabbitmq:
+    host:
+      localhost
+    port: 5672
+    username: guest
+    password: guest
+  main:
+    allow-bean-definition-overriding: true
+
+application:
+  security:
+    jwt:
+      secret-key: R3Y4z3b7J2R7r4x/9dG3oJ1+Fz62/N2c6K6k8l/k78X1f06W+mO8V8xYzD+Zv1gC4f+G8G1n9r9Xz6R+O8t5f4o04J7q+bYd+f7U45a9V9c684R2j+G46x3j41r4i3t4F1G9w856m2q01s1T34M8x7P6M5J6e+k9m03a/n5Y5/8
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000
+
+activation:
+  url: http://localhost:8222/api/v1/auth/activate
+
+
+
+server:
+  port: 8090
+
+springdoc:
+  api:
+      cs:
+        path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true

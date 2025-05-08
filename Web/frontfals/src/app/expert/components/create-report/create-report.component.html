@@ -1,0 +1,253 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title mb-0">Create New Report</h2>
+    </div>
+    <div class="card-body">
+
+      <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+      <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        <div class="row">
+          <!-- Case Selection -->
+          <div class="col-md-6 mb-3">
+            <label for="caseId" class="form-label">Case <span class="text-danger">*</span></label>
+            <select id="caseId" formControlName="caseId" class="form-select"
+                    (change)="onCaseSelectionChange($event)"
+                    (blur)="markFieldAsChecked('caseId')"
+                    [class.is-invalid]="(f.caseId.invalid && (f.caseId.dirty || formSubmitted)) || fieldErrors['caseId']">
+              <option value="" disabled selected>Select a Case</option>
+              <option *ngFor="let caseItem of cases" [value]="caseItem.id">{{ caseItem.caseNumber }} - {{ caseItem.title }}</option>
+            </select>
+            <div class="invalid-feedback"
+                 *ngIf="(f.caseId.invalid && (f.caseId.dirty || formSubmitted)) || fieldErrors['caseId']">
+              Case is required.
+            </div>
+            <div class="form-text" *ngIf="selectedCase">
+              Selected Case: {{ selectedCase.caseNumber }} - {{ selectedCase.title }}
+            </div>
+          </div>
+
+          <!-- Template Selection -->
+          <div class="col-md-6 mb-3">
+            <label for="templateId" class="form-label">Report Template <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <select id="templateId" formControlName="templateId" class="form-select"
+                      (change)="onTemplateSelectionChange($event)"
+                      (blur)="markFieldAsChecked('templateId')"
+                      [class.is-invalid]="(f.templateId.invalid && (f.templateId.dirty || formSubmitted)) || fieldErrors['templateId']">
+                <option value="" disabled selected>Select a Template</option>
+                <option *ngFor="let template of templates" [value]="template.id">{{ template.name }} {{ template.isDefault ? '(Default)' : '' }}</option>
+              </select>
+              <button class="btn btn-outline-secondary" type="button" (click)="openTemplateModal()">
+                <i class="bi bi-upload"></i> Upload New
+              </button>
+              <button class="btn btn-outline-info" type="button" (click)="previewTemplate()" [disabled]="!selectedTemplate">
+                <i class="bi bi-eye"></i> Preview
+              </button>
+            </div>
+            <div class="invalid-feedback"
+                 *ngIf="(f.templateId.invalid && (f.templateId.dirty || formSubmitted)) || fieldErrors['templateId']">
+              Report Template is required.
+            </div>
+            <div class="form-text" *ngIf="selectedTemplate">
+              Selected Template: {{ selectedTemplate.name }}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Report Type -->
+          <div class="col-md-6 mb-3">
+            <label for="reportType" class="form-label">Report Type <span class="text-danger">*</span></label>
+            <select id="reportType" formControlName="reportType" class="form-select"
+                    (blur)="markFieldAsChecked('reportType')"
+                    [class.is-invalid]="(f.reportType.invalid && (f.reportType.dirty || formSubmitted)) || fieldErrors['reportType']">
+              <option *ngFor="let type of ReportType | keyvalue" [value]="type.value">
+                {{ type.key | titlecase | replaceUnderscoreWithSpace }}
+              </option>
+            </select>
+            <div class="invalid-feedback"
+                 *ngIf="(f.reportType.invalid && (f.reportType.dirty || formSubmitted)) || fieldErrors['reportType']">
+              Report Type is required.
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div class="col-md-6 mb-3">
+            <label for="title" class="form-label">Report Title <span class="text-danger">*</span></label>
+            <input type="text" id="title" formControlName="title" class="form-control"
+                   (blur)="markFieldAsChecked('title')"
+                   [class.is-invalid]="(f.title.invalid && (f.title.dirty || formSubmitted)) || fieldErrors['title']">
+            <div class="invalid-feedback"
+                 *ngIf="(f.title.invalid && (f.title.dirty || formSubmitted)) || fieldErrors['title']">
+              <span *ngIf="f.title.errors?.['required']">Title is required.</span>
+              <span *ngIf="f.title.errors?.['minlength']">Title must be at least 3 characters long.</span>
+              <span *ngIf="f.title.errors?.['maxlength']">Title cannot exceed 100 characters.</span>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea id="description" formControlName="description" class="form-control" rows="3"
+                    (blur)="markFieldAsChecked('description')"
+                    [class.is-invalid]="(f.description.invalid && (f.description.dirty || formSubmitted)) || fieldErrors['description']"></textarea>
+          <div class="invalid-feedback"
+               *ngIf="(f.description.invalid && (f.description.dirty || formSubmitted)) || fieldErrors['description']">
+            <span *ngIf="f.description.errors?.['maxlength']">Description cannot exceed 2000 characters.</span>
+          </div>
+        </div>
+
+        <!-- Analyses Selection -->
+        <div class="mb-3" [class.is-invalid-analysis-group]="(isAnalysisIdsEmpty && formSubmitted) || fieldErrors['analysisIds']">
+          <label class="form-label">Select Analyses to Include <span class="text-danger">*</span></label>
+          <div class="invalid-feedback d-block"
+               *ngIf="(isAnalysisIdsEmpty && formSubmitted) || fieldErrors['analysisIds']">
+            At least one analysis must be selected.
+          </div>
+          <div class="card card-body analysis-list" *ngIf="selectedCase">
+            <div *ngIf="availableAnalyses.length === 0">No analyses available for this case.</div>
+            <div *ngIf="availableAnalyses.length > 0">
+              <div class="form-check" *ngFor="let analysis of availableAnalyses">
+                <input class="form-check-input" type="checkbox" id="analysis-{{ analysis.id }}"
+                       [checked]="isAnalysisSelected(analysis.id)"
+                       (change)="onAnalysisSelectionChange($event, analysis)"
+                       (blur)="markFieldAsChecked('analysisIds')"
+                >
+                <label class="form-check-label" for="analysis-{{ analysis.id }}">
+                  {{ analysis.analysisType | titlecase }} - Date: {{ analysis.date | date:'shortDate' }}
+                  <app-status-badge [status]="analysis.isFalsified ? 'Falsified' : 'Authentic'"></app-status-badge>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-text" *ngIf="!selectedCase">
+            Please select a case first to view available analyses.
+          </div>
+        </div>
+
+        <!-- Verdict -->
+        <div class="mb-3">
+          <label for="verdict" class="form-label">Verdict/Conclusion</label>
+          <textarea id="verdict" formControlName="verdict" class="form-control" rows="4"
+                    (blur)="markFieldAsChecked('verdict')"
+                    [class.is-invalid]="(f.verdict.invalid && (f.verdict.dirty || formSubmitted)) || fieldErrors['verdict']"></textarea>
+          <div class="invalid-feedback"
+               *ngIf="(f.verdict.invalid && (f.verdict.dirty || formSubmitted)) || fieldErrors['verdict']">
+            <span *ngIf="f.verdict.errors?.['maxlength']">Verdict cannot exceed 2000 characters.</span>
+          </div>
+        </div>
+
+        <!-- Judicial Notes -->
+        <div class="mb-3">
+          <label for="judicialNotes" class="form-label">Judicial Notes (Optional)</label>
+          <textarea id="judicialNotes" formControlName="judicialNotes" class="form-control" rows="4"
+                    (blur)="markFieldAsChecked('judicialNotes')"
+                    [class.is-invalid]="(f.judicialNotes.invalid && (f.judicialNotes.dirty || formSubmitted)) || fieldErrors['judicialNotes']"></textarea>
+          <div class="invalid-feedback"
+               *ngIf="(f.judicialNotes.invalid && (f.judicialNotes.dirty || formSubmitted)) || fieldErrors['judicialNotes']">
+            <span *ngIf="f.judicialNotes.errors?.['maxlength']">Judicial Notes cannot exceed 2000 characters.</span>
+          </div>
+        </div>
+
+        <!-- Generated By (Readonly) -->
+        <div class="mb-3">
+          <label for="generatedBy" class="form-label">Generated By</label>
+          <input type="text" id="generatedBy" formControlName="generatedBy" class="form-control" readonly>
+        </div>
+
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary" [disabled]="submitting || loading">
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ submitting ? 'Creating Report...' : 'Create Report' }}
+        </button>
+        <button type="button" class="btn btn-secondary ms-2" [routerLink]="['/expert/reports']">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Template Modal -->
+<div class="modal" [class.d-block]="showTemplateModal" tabindex="-1" role="dialog" aria-labelledby="uploadTemplateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadTemplateModalLabel">Upload New Template</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeTemplateModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="templateForm">
+          <div class="mb-3">
+            <label for="templateName" class="form-label">Template Name <span class="text-danger">*</span></label>
+            <input type="text" id="templateName" formControlName="name" class="form-control"
+                   (blur)="markTemplateFieldAsChecked('name')"
+                   [class.is-invalid]="templateForm.get('name')?.invalid && (templateForm.get('name')?.dirty || formSubmitted)">
+            <div class="invalid-feedback"
+                 *ngIf="templateForm.get('name')?.invalid && (templateForm.get('name')?.dirty || formSubmitted)">
+              <span *ngIf="templateForm.get('name')?.errors?.['required']">Template name is required.</span>
+              <span *ngIf="templateForm.get('name')?.errors?.['minlength']">Template name must be at least 3 characters.</span>
+              <span *ngIf="templateForm.get('name')?.errors?.['maxlength']">Template name cannot exceed 100 characters.</span>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="templateDescription" class="form-label">Description</label>
+            <textarea id="templateDescription" formControlName="description" class="form-control" rows="2"
+                      (blur)="markTemplateFieldAsChecked('description')"
+                      [class.is-invalid]="templateForm.get('description')?.invalid && (templateForm.get('description')?.dirty || formSubmitted)"></textarea>
+            <div class="invalid-feedback"
+                 *ngIf="templateForm.get('description')?.invalid && (templateForm.get('description')?.dirty || formSubmitted)">
+              <span *ngIf="templateForm.get('description')?.errors?.['maxlength']">Description cannot exceed 500 characters.</span>
+            </div>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" id="isDefaultTemplate" formControlName="isDefault" class="form-check-input">
+            <label class="form-check-label" for="isDefaultTemplate">Set as Default Template</label>
+          </div>
+          <div class="mb-3">
+            <label for="templateFile" class="form-label">Template File (.html) <span class="text-danger">*</span></label>
+            <input type="file" id="templateFile" class="form-control" accept=".html" (change)="onFileSelected($event)"
+                   [class.is-invalid]="!templateFile && formSubmitted">
+            <div class="invalid-feedback" *ngIf="!templateFile && formSubmitted">
+              Template file is required.
+            </div>
+          </div>
+          <div class="progress mb-3" *ngIf="uploadProgress > 0 && uploadProgress < 100">
+            <div class="progress-bar" role="progressbar" [style.width]="uploadProgress + '%'" [attr.aria-valuenow]="uploadProgress" aria-valuemin="0" aria-valuemax="100">{{ uploadProgress }}%</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeTemplateModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="uploadTemplate()" [disabled]="templateForm.invalid || !templateFile">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Template Preview Modal -->
+<div class="modal" [class.d-block]="showPreviewModal" tabindex="-1" role="dialog" aria-labelledby="previewTemplateModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewTemplateModalLabel">Template Preview: {{ selectedTemplate?.name }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closePreviewModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="templatePreviewContent" [innerHTML]="templatePreviewContent" class="template-preview-area">
+          <!-- Template HTML content will be rendered here -->
+        </div>
+        <div *ngIf="!templatePreviewContent" class="text-center">Loading preview...</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closePreviewModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop for Modals -->
+<div class="modal-backdrop fade show" *ngIf="showTemplateModal || showPreviewModal"></div>

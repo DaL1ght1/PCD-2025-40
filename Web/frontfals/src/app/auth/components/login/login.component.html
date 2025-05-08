@@ -1,0 +1,86 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Login</h2>
+      <p>Sign in to your account</p>
+    </div>
+
+    <!-- Add a connection error alert -->
+    <div *ngIf="!serverReachable" class="alert alert-danger mb-3">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      Cannot connect to the server. Please check your network connection or try again later.
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fas fa-envelope"></i>
+          </span>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched }"
+            autocomplete="email"
+            placeholder="Enter your email"
+          >
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          {{ getErrorMessage('email') }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fas fa-lock"></i>
+          </span>
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }"
+            autocomplete="current-password"
+            placeholder="Enter your password"
+          >
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="hidePassword = !hidePassword"
+          >
+            <i class="fas" [ngClass]="hidePassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          {{ getErrorMessage('password') }}
+        </div>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="rememberMe" formControlName="rememberMe">
+        <label class="form-check-label" for="rememberMe">Remember me</label>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || loading || !serverReachable">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Login
+        </button>
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      <p>
+        <a routerLink="/forgot-password">Forgot Password?</a>
+      </p>
+      <p>
+        Don't have an account? <a routerLink="/register">Register</a>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+{
+  "/api/v1": {
+    "target": "http://localhost:8090",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/api/v1/images": {
+    "target": "http://localhost:8050",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/api/v1/analysis": {
+    "target": "http://localhost:8051",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/api/v1/reports": {
+    "target": "http://localhost:8053",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

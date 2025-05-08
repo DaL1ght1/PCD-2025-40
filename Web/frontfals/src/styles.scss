@@ -1,0 +1,536 @@
+/* Import Bootstrap */
+@use 'bootstrap/scss/bootstrap' as bootstrap;
+@use 'ngx-toastr/toastr' as toastr;
+@use'./app/theme/theme';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+/* Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variables */
+:root {
+  --primary-color: #3f51b5;
+  --primary-light: #757de8;
+  --primary-dark: #002984;
+  --accent-color: #ff4081;
+  --accent-light: #ff79b0;
+  --accent-dark: #c60055;
+  --warn-color: #f44336;
+  --success-color: #4caf50;
+  --info-color: #2196f3;
+  --warning-color: #ff9800;
+  --error-color: #f44336;
+
+  --text-color: #212121;
+  --text-color-secondary: #757575;
+  --bg-color: #f5f5f5;
+  --card-bg: #ffffff;
+  --border-color: #e0e0e0;
+
+  --primary-rgb: 63, 81, 181;
+  --accent-rgb: 255, 64, 129;
+  --warn-rgb: 244, 67, 54;
+}
+
+/* Dark theme */
+.dark-theme {
+  --primary-color: #5c6bc0;
+  --primary-light: #8e99f3;
+  --primary-dark: #26418f;
+  --accent-color: #ff4081;
+  --accent-light: #ff79b0;
+  --accent-dark: #c60055;
+
+  --text-color: #ffffff;
+  --text-color-secondary: #b0b0b0;
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --border-color: #333333;
+}
+
+/* Global layout fixes */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  overflow-x: hidden;
+}
+
+/* Ensure all route components take full height */
+router-outlet + * {
+  display: block;
+  height: 100%;
+}
+
+/* Fix for Angular Material components */
+.mat-drawer-container,
+.mat-sidenav-container {
+  height: 100%;
+}
+
+.mat-drawer-content,
+.mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* Ensure content areas scroll properly */
+.content-area,
+.page-container,
+.container-fluid,
+.dashboard-container,
+.admin-dashboard,
+.user-management,
+.case-management-container,
+.image-management {
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 599px) {
+  .content-area,
+  .page-container,
+  .container-fluid,
+  .dashboard-container,
+  .admin-dashboard,
+  .user-management,
+  .case-management-container,
+  .image-management {
+    padding: 16px;
+  }
+}
+
+/* Snackbar styles */
+.error-snackbar {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.success-snackbar {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.warning-snackbar {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.info-snackbar {
+  background-color: var(--info-color);
+  color: white;
+}
+
+/* Card styles */
+.card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 20px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-footer {
+  background-color: var(--card-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 16px 20px;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.btn-accent {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+/* Form styles */
+.form-control {
+  border-color: var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+}
+
+/* Table styles */
+.table {
+  color: var(--text-color);
+}
+
+.table thead th {
+  border-bottom-color: var(--border-color);
+  background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+.table td, .table th {
+  border-top-color: var(--border-color);
+}
+
+/* Badge styles */
+.badge-primary {
+  background-color: var(--primary-color);
+}
+
+.badge-accent {
+  background-color: var(--accent-color);
+}
+
+.badge-success {
+  background-color: var(--success-color);
+}
+
+.badge-warning {
+  background-color: var(--warning-color);
+}
+
+.badge-danger {
+  background-color: var(--error-color);
+}
+
+/* Fix for Angular Material components in dark mode */
+.dark-theme .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: var(--border-color);
+}
+
+.dark-theme .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: var(--primary-color);
+}
+
+.dark-theme .mat-input-element {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-form-field-label {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+  color: var(--primary-color);
+}
+
+.dark-theme .mat-select-value {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-select-arrow {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-select-panel {
+  background-color: var(--card-bg);
+}
+
+.dark-theme .mat-option {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-option:hover:not(.mat-option-disabled) {
+  background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+.dark-theme .mat-calendar-body-cell-content {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-calendar-body-selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.dark-theme .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--primary-color);
+}
+
+.dark-theme .mat-datepicker-toggle-active {
+  color: var(--primary-color);
+}
+
+.dark-theme .mat-datepicker-content {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.dark-theme .mat-calendar-arrow {
+  border-top-color: var(--text-color);
+}
+
+.dark-theme .mat-calendar-next-button,
+.dark-theme .mat-calendar-previous-button {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-calendar-table-header {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-calendar-body-label {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-calendar-body-cell-content {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-calendar-body-disabled > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after,
+.dark-theme .mat-input-element:disabled {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-form-field-appearance-outline.mat-form-field-disabled .mat-form-field-label {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-form-field-appearance-outline.mat-form-field-disabled .mat-form-field-outline {
+  color: var(--border-color);
+}
+
+.dark-theme .mat-checkbox-frame {
+  border-color: var(--border-color);
+}
+
+.dark-theme .mat-checkbox-checked.mat-primary .mat-checkbox-background {
+  background-color: var(--primary-color);
+}
+
+.dark-theme .mat-checkbox-label {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-checkbox-disabled .mat-checkbox-label {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-radio-outer-circle {
+  border-color: var(--border-color);
+}
+
+.dark-theme .mat-radio-checked .mat-radio-outer-circle {
+  border-color: var(--primary-color);
+}
+
+.dark-theme .mat-radio-inner-circle {
+  background-color: var(--primary-color);
+}
+
+.dark-theme .mat-radio-label-content {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-radio-disabled .mat-radio-label-content {
+  color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-slide-toggle-bar {
+  background-color: var(--border-color);
+}
+
+.dark-theme .mat-slide-toggle-thumb {
+  background-color: var(--text-color-secondary);
+}
+
+.dark-theme .mat-slide-toggle-checked .mat-slide-toggle-thumb {
+  background-color: var(--primary-color);
+}
+
+.dark-theme .mat-slide-toggle-checked .mat-slide-toggle-bar {
+  background-color: rgba(var(--primary-rgb), 0.5);
+}
+
+.dark-theme .mat-slide-toggle-content {
+  color: var(--text-color);
+}
+
+.dark-theme .mat-slide-toggle-disabled .mat-slide-toggle-content {
+  color: var(--text-color-secondary);
+}
+
+/* Bootstrap overrides to match our theme */
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.bg-accent {
+  background-color: var(--accent-color) !important;
+}
+
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.text-accent {
+  color: var(--accent-color) !important;
+}
+
+.border-primary {
+  border-color: var(--primary-color) !important;
+}
+
+/* Utility classes for spacing and layout */
+.full-height {
+  height: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.rounded {
+  border-radius: 4px;
+}
+
+.rounded-circle {
+  border-radius: 50%;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shadow {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-lg {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.notification-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.notification-error {
+  background-color: var(--warn-color);
+  color: white;
+}
+
+.notification-warning {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.notification-info {
+  background-color: var(--info-color);
+  color: white;
+}
+
+// Dark theme notification styles
+.dark-theme {
+  .notification-success,
+  .notification-error,
+  .notification-warning,
+  .notification-info {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}

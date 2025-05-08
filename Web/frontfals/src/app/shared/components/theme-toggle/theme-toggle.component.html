@@ -1,0 +1,8 @@
+<button
+  class="theme-toggle-btn"
+  (click)="toggleTheme()"
+  [attr.aria-label]="currentTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+  [title]="currentTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'">
+  <i class="fas" [ngClass]="currentTheme === 'light' ? 'fa-moon' : 'fa-sun'"></i>
+  <span class="sr-only">{{ currentTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode' }}</span>
+</button>

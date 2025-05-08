@@ -1,0 +1,53 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2>Upload Image</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="caseId" class="form-label">Case ID</label>
+          <input type="text" class="form-control" id="caseId" formControlName="caseId" placeholder="Enter case ID">
+          <div *ngIf="uploadForm.get('caseId')?.invalid && !uploadForm.get('caseId')?.untouched" class="text-danger">
+            Case ID is required
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea class="form-control" id="description" formControlName="description" rows="3" placeholder="Enter image description"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Image</label>
+          <ngx-dropzone (change)="onSelect($event)" [multiple]="false" [accept]="'image/*'">
+            <ngx-dropzone-label>Drop your image here or click to browse</ngx-dropzone-label>
+            <ngx-dropzone-preview *ngFor="let file of files" [removable]="true" (removed)="onRemove(file)">
+              <ngx-dropzone-label>{{ file.name }} ({{ file.size | number }} bytes)</ngx-dropzone-label>
+            </ngx-dropzone-preview>
+          </ngx-dropzone>
+          <div *ngIf="files.length === 0 && uploading === false" class="text-danger mt-2">
+            Please select an image to upload
+          </div>
+        </div>
+
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="autoAnalyze" formControlName="autoAnalyze">
+          <label class="form-check-label" for="autoAnalyze">Automatically analyze after upload</label>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+          <button type="submit" class="btn btn-primary" [disabled]="uploadForm.invalid || files.length === 0 || uploading">
+            <span *ngIf="uploading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ uploading ? 'Uploading...' : 'Upload' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  </div>

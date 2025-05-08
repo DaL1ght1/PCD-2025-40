@@ -1,0 +1,137 @@
+<div class="user-form-dialog">
+  <div class="dialog-header">
+    <h2 class="dialog-title">{{ data.isEdit ? 'Edit User' : 'Add New User' }}</h2>
+    <button class="close-btn" (click)="dialogRef.close()" aria-label="Close dialog">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstname">First Name</label>
+          <input
+            type="text"
+            id="firstname"
+            formControlName="firstname"
+            class="form-control"
+            [ngClass]="{'is-invalid': submitted && f['firstname'].errors}"
+          >
+          <div *ngIf="submitted && f['firstname'].errors" class="error-message">
+            <span *ngIf="f['firstname'].errors['required']">First name is required</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastname">Last Name</label>
+          <input
+            type="text"
+            id="lastname"
+            formControlName="lastname"
+            class="form-control"
+            [ngClass]="{'is-invalid': submitted && f['lastname'].errors}"
+          >
+          <div *ngIf="submitted && f['lastname'].errors" class="error-message">
+            <span *ngIf="f['lastname'].errors['required']">Last name is required</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [ngClass]="{'is-invalid': submitted && f['email'].errors}"
+        >
+        <div *ngIf="submitted && f['email'].errors" class="error-message">
+          <span *ngIf="f['email'].errors['required']">Email is required</span>
+          <span *ngIf="f['email'].errors['email']">Please enter a valid email address</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select
+            id="role"
+            formControlName="role"
+            class="form-control"
+            [ngClass]="{'is-invalid': submitted && f['role'].errors}"
+          >
+            <option value="">Select a role</option>
+            <option value="ADMIN">Admin</option>
+            <option value="EXPERT">Expert</option>
+            <option value="INVESTIGATOR">Investigator</option>
+            <option value="LAWYER">Lawyer</option>
+            <option value="JUDGE">Judge</option>
+          </select>
+          <div *ngIf="submitted && f['role'].errors" class="error-message">
+            <span *ngIf="f['role'].errors['required']">Role is required</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select
+            id="status"
+            formControlName="status"
+            class="form-control"
+            [ngClass]="{'is-invalid': submitted && f['status'].errors}"
+          >
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Pending">Pending</option>
+          </select>
+          <div *ngIf="submitted && f['status'].errors" class="error-message">
+            <span *ngIf="f['status'].errors['required']">Status is required</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address (optional)</label>
+        <input
+          type="text"
+          id="address"
+          formControlName="address"
+          class="form-control"
+          [ngClass]="{'is-invalid': submitted && f['address'].errors}"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">{{ data.isEdit ? 'New Password (optional)' : 'Password' }}</label>
+        <div class="password-input-container">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            [ngClass]="{'is-invalid': submitted && f['password'].errors}"
+          >
+          <button
+            type="button"
+            class="password-toggle-btn"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="submitted && f['password'].errors" class="error-message">
+          <span *ngIf="f['password'].errors['required']">Password is required</span>
+          <span *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters</span>
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn-cancel" (click)="dialogRef.close()">Cancel</button>
+        <button type="submit" class="btn-save">{{ data.isEdit ? 'Update' : 'Create' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

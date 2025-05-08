@@ -1,0 +1,29 @@
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>Case ID</th>
+      <th>Title</th>
+      <th>Submission Date</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let case of cases">
+      <td>{{ case.id }}</td>
+      <td>{{ case.title }}</td>
+      <td>{{ case.createdAt | date }}</td>
+      <td><app-status-badge [status]="case.status"></app-status-badge></td>
+      <td>
+        <a [routerLink]="['/cases', case.id]" class="btn btn-sm btn-outline-primary">
+          <i class="fas fa-eye"></i> View
+        </a>
+      </td>
+    </tr>
+    <tr *ngIf="!cases || cases.length === 0">
+      <td colspan="5" class="text-center py-3">No cases available</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

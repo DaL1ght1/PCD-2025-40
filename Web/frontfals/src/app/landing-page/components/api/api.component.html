@@ -1,0 +1,157 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">API Reference</h1>
+      <p class="page-description">
+        Integrate FIDS capabilities directly into your applications with our comprehensive API
+      </p>
+    </div>
+  </header>
+
+  <section class="api-overview">
+    <div class="container">
+      <div class="overview-content">
+        <div class="overview-text">
+          <h2>Powerful REST API</h2>
+          <p>
+            The FIDS API provides programmatic access to all our image analysis capabilities, allowing you to integrate our technology directly into your applications and workflows.
+          </p>
+          <p>
+            Our RESTful API uses standard HTTP methods and returns JSON responses, making it easy to integrate with any programming language or framework.
+          </p>
+          <div class="api-features">
+            <div class="feature">
+              <i class="material-icons">security</i>
+              <div>
+                <h3>Secure Authentication</h3>
+                <p>API keys with granular permissions and optional IP restrictions</p>
+              </div>
+            </div>
+            <div class="feature">
+              <i class="material-icons">speed</i>
+              <div>
+                <h3>High Performance</h3>
+                <p>Low latency responses with 99.9% uptime SLA</p>
+              </div>
+            </div>
+            <div class="feature">
+              <i class="material-icons">code</i>
+              <div>
+                <h3>Developer Friendly</h3>
+                <p>Comprehensive documentation and client libraries</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="overview-code">
+          <div class="code-header">
+            <div class="language-tabs">
+              <button
+                *ngFor="let lang of ['curl', 'python', 'javascript']"
+                [class.active]="selectedLanguage === lang"
+                (click)="setLanguage(lang)">
+                {{lang}}
+              </button>
+            </div>
+          </div>
+          <div class="code-content">
+            <pre><code>{{codeExamples[selectedLanguage]}}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="api-endpoints">
+    <div class="container">
+      <h2 class="section-title">API Endpoints</h2>
+      <p class="section-description">
+        Explore our comprehensive set of API endpoints
+      </p>
+
+      <div class="endpoints-accordion">
+        <div class="endpoint-category" *ngFor="let category of endpoints">
+          <div class="category-header">
+            <h3>{{category.category}}</h3>
+            <i class="material-icons">expand_more</i>
+          </div>
+          <div class="category-content">
+            <div class="endpoint-item" *ngFor="let endpoint of category.items">
+              <div class="endpoint-method" [ngClass]="endpoint.method.toLowerCase()">{{endpoint.method}}</div>
+              <div class="endpoint-path">{{endpoint.path}}</div>
+              <div class="endpoint-name">{{endpoint.name}}</div>
+              <div class="endpoint-action">
+                <a [routerLink]="'/api/reference' + endpoint.path">
+                  <i class="material-icons">arrow_forward</i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="api-resources">
+    <div class="container">
+      <h2 class="section-title">API Resources</h2>
+      <div class="resources-grid">
+        <a routerLink="/api/getting-started" class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">play_circle</i>
+          </div>
+          <h3>Getting Started</h3>
+          <p>Quick start guide to using the FIDS API</p>
+        </a>
+        <a routerLink="/api/authentication" class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">vpn_key</i>
+          </div>
+          <h3>Authentication</h3>
+          <p>Learn how to authenticate your API requests</p>
+        </a>
+        <a routerLink="/api/rate-limits" class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">speed</i>
+          </div>
+          <h3>Rate Limits</h3>
+          <p>Understanding API rate limits and quotas</p>
+        </a>
+        <a routerLink="/api/webhooks" class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">webhook</i>
+          </div>
+          <h3>Webhooks</h3>
+          <p>Receive real-time notifications for events</p>
+        </a>
+        <a routerLink="/api/sdks" class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">integration_instructions</i>
+          </div>
+          <h3>Client Libraries</h3>
+          <p>Official SDKs for popular programming languages</p>
+        </a>
+        <a routerLink="/api/changelog" class="resource-card">
+          <div class="resource-icon">
+            <i class="material-icons">history</i>
+          </div>
+          <h3>Changelog</h3>
+          <p>Stay updated with API changes and improvements</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to integrate?</h2>
+        <p>Get your API key and start building with FIDS today.</p>
+        <div class="cta-buttons">
+          <a routerLink="/register" class="btn btn-primary">Get API Key</a>
+          <a routerLink="/contact" class="btn btn-outline">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

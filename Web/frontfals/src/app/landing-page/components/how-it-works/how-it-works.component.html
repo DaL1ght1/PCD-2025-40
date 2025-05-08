@@ -1,0 +1,54 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">How FIDS Works</h1>
+      <p class="page-description">
+        Our streamlined process combines cutting-edge AI with expert human analysis
+        to deliver reliable, court-admissible results.
+      </p>
+    </div>
+  </header>
+
+  <section class="workflow-section">
+    <div class="container">
+      <div class="workflow-steps">
+        <div class="workflow-step" *ngFor="let step of workflowSteps; let i = index">
+          <div class="step-content">
+            <div class="step-number">{{step.number}}</div>
+            <h2 class="step-title">{{step.title}}</h2>
+            <p class="step-description">{{step.description}}</p>
+            <p class="step-details">{{step.details}}</p>
+          </div>
+          <div class="step-image">
+            <img [src]="step.image" [alt]="step.title">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-grid">
+        <div class="faq-item" *ngFor="let faq of faqs">
+          <h3 class="faq-question">{{faq.question}}</h3>
+          <p class="faq-answer">{{faq.answer}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to get started?</h2>
+        <p>Experience the FIDS workflow with your own images.</p>
+        <div class="cta-buttons">
+          <a routerLink="/register" class="btn btn-primary">Start Free Trial</a>
+          <a routerLink="/contact" class="btn btn-outline">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
