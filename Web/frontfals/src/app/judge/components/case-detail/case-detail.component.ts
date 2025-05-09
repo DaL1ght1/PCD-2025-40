@@ -1,3 +1,5 @@
+// Updated case-detail.component.ts
+
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { CaseService } from "../../../core/services/case.service";
@@ -13,9 +15,6 @@ import { LoadingSpinnerComponent } from "../../../shared/components/loading-spin
 import { StatusBadgeComponent } from "../../../shared/components/status-badge/status-badge.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { catchError, finalize, forkJoin, of } from "rxjs";
-
-// Declare bootstrap variable
-declare var bootstrap: any;
 
 @Component({
   imports: [
@@ -62,6 +61,9 @@ export class CaseDetailComponent implements OnInit, AfterViewInit {
   imageLoadingStates: { [key: string]: boolean } = {};
   imageErrors: { [key: string]: boolean } = {};
 
+  // Track accordion state for each report
+  accordionStates: { [key: number]: boolean } = {};
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -82,9 +84,6 @@ export class CaseDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // Track accordion state for each report
-  accordionStates: { [key: number]: boolean } = {};
-
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get("id") || "";
     if (this.id) {
@@ -96,8 +95,14 @@ export class CaseDetailComponent implements OnInit, AfterViewInit {
     }
   }
 
+  ngAfterViewInit(): void {
+    // No need to initialize accordions here since we're using our own toggle mechanism
+  }
+
   // Toggle accordion manually
   toggleReportAccordion(index: number): void {
+    // Log the toggle action to verify it's being called
+    console.log(`Toggling accordion ${index}, current state: ${this.accordionStates[index]}`);
     this.accordionStates[index] = !this.accordionStates[index];
   }
 
@@ -172,16 +177,18 @@ export class CaseDetailComponent implements OnInit, AfterViewInit {
           });
         }
 
-        // Handle reports
+        // Handle reports - make sure we're getting data and initialize accordion states
         this.loadingReports = false;
-        this.caseReports = results.reports;
+        this.caseReports = results.reports || [];
         console.log(`Loaded ${this.caseReports.length} reports:`, this.caseReports);
 
         // Sort reports by creation date (newest first)
         this.caseReports.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-        // Initialize accordion after reports are loaded
-        setTimeout(() => this.initializeAccordions(), 100);
+        // Initialize accordion states object - make sure each report has a state
+        this.caseReports.forEach((_, index) => {
+          this.accordionStates[index] = false;
+        });
       },
       error: (err) => {
         console.error("Error in forkJoin:", err);
@@ -258,13 +265,16 @@ export class CaseDetailComponent implements OnInit, AfterViewInit {
         }),
       )
       .subscribe((reports) => {
-        this.caseReports = reports;
+        this.caseReports = reports || [];
+        console.log(`Reloaded ${this.caseReports.length} reports`);
 
         // Sort reports by creation date (newest first)
         this.caseReports.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-        // Initialize accordion after reports are loaded
-        setTimeout(() => this.initializeAccordions(), 100);
+        // Re-initialize accordion states
+        this.caseReports.forEach((_, index) => {
+          this.accordionStates[index] = false;
+        });
       });
   }
 
@@ -357,80 +367,5 @@ export class CaseDetailComponent implements OnInit, AfterViewInit {
     } else {
       this.toastr.error("PDF not available for this report", "Error");
     }
-  }
-
-  ngAfterViewInit(): void {
-    // Wait for DOM to be ready
-    setTimeout(() => this.initializeAccordions(), 500);
-  }
-
-  private initializeAccordions(): void {
-    try {
-      console.log("Initializing accordions...");
-
-      // Check if Bootstrap is available
-      if (typeof bootstrap === "undefined") {
-        console.error("Bootstrap is not available. Make sure Bootstrap JS is loaded.");
-        this.setupManualAccordion();
-        return;
-      }
-
-      // Get all accordion buttons
-      const accordionButtons = document.querySelectorAll('.accordion-button');
-      console.log(`Found ${accordionButtons.length} accordion buttons`);
-
-      // Add manual click handlers for each button
-      accordionButtons.forEach((button, index) => {
-        button.addEventListener('click', (event) => {
-          const target = (event.currentTarget as HTMLElement).getAttribute('data-bs-target');
-          if (target) {
-            const collapseElement = document.querySelector(target);
-            if (collapseElement) {
-              // Check if Bootstrap Collapse is available
-              if (bootstrap && bootstrap.Collapse) {
-                const bsCollapse = new bootstrap.Collapse(collapseElement, {
-                  toggle: true
-                });
-              } else {
-                // Fallback to manual toggle
-                collapseElement.classList.toggle('show');
-              }
-            }
-          }
-        });
-      });
-    } catch (error) {
-      console.error("Error initializing accordions:", error);
-      // Fallback to manual implementation
-      this.setupManualAccordion();
-    }
-  }
-
-  private setupManualAccordion(): void {
-    console.log("Setting up manual accordion functionality");
-
-    // Select all accordion buttons
-    const accordionButtons = document.querySelectorAll('.accordion-button');
-
-    // Add click event to each button
-    accordionButtons.forEach((button) => {
-      button.addEventListener('click', function(this: HTMLElement) {
-        // Get the target from data-bs-target attribute
-        const targetId = this.getAttribute('data-bs-target')?.replace('#', '');
-        if (!targetId) return;
-
-        // Find the target collapse element
-        const collapseElement = document.getElementById(targetId);
-        if (!collapseElement) return;
-
-        // Toggle the 'show' class
-        collapseElement.classList.toggle('show');
-
-        // Toggle the expanded state of the button
-        const isExpanded = collapseElement.classList.contains('show');
-        this.setAttribute('aria-expanded', isExpanded.toString());
-        this.classList.toggle('collapsed', !isExpanded);
-      });
-    });
   }
 }

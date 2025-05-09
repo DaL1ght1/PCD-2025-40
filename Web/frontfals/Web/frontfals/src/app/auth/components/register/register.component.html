@@ -1,0 +1,149 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Register</h2>
+      <p>Create a new account</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="firstname" class="form-label">First Name</label>
+        <input
+          type="text"
+          id="firstname"
+          formControlName="firstname"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': registerForm.get('firstname')?.invalid && registerForm.get('firstname')?.touched }"
+          placeholder="Enter your first name"
+        >
+        <div class="invalid-feedback d-block" *ngIf="registerForm.get('firstname')?.touched && registerForm.get('firstname')?.invalid">
+          {{ getErrorMessage('firstname') }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="lastname" class="form-label">Last Name</label>
+        <input
+          type="text"
+          id="lastname"
+          formControlName="lastname"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': registerForm.get('lastname')?.invalid && registerForm.get('lastname')?.touched }"
+          placeholder="Enter your last name"
+        >
+        <div class="invalid-feedback d-block" *ngIf="registerForm.get('lastname')?.touched && registerForm.get('lastname')?.invalid">
+          {{ getErrorMessage('lastname') }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched }"
+          autocomplete="email"
+          placeholder="Enter your email"
+        >
+        <div class="invalid-feedback d-block" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+          {{ getErrorMessage('email') }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fas fa-lock"></i>
+          </span>
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched }"
+            autocomplete="new-password"
+            placeholder="Create a password"
+          >
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="hidePassword = !hidePassword"
+          >
+            <i class="fas" [ngClass]="hidePassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+          {{ getErrorMessage('password') }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fas fa-lock"></i>
+          </span>
+          <input
+            [type]="hideConfirmPassword ? 'password' : 'text'"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched }"
+            autocomplete="new-password"
+            placeholder="Confirm your password"
+          >
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="hideConfirmPassword = !hideConfirmPassword"
+          >
+            <i class="fas" [ngClass]="hideConfirmPassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid">
+          {{ getErrorMessage('confirmPassword') }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fas fa-user-tag"></i>
+          </span>
+          <select
+            id="role"
+            formControlName="role"
+            class="form-select"
+            [ngClass]="{ 'is-invalid': registerForm.get('role')?.invalid && registerForm.get('role')?.touched }"
+          >
+            <option value="">Select a role</option>
+            <option value="INVESTIGATOR">Investigator</option>
+            <option value="EXPERT">Expert</option>
+            <option value="LAWYER">Lawyer</option>
+            <option value="JUDGE">Judge</option>
+          </select>
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="registerForm.get('role')?.touched && registerForm.get('role')?.invalid">
+          {{ getErrorMessage('role') }}
+        </div>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Register
+        </button>
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      <p>
+        Already have an account? <a routerLink="/login">Login</a>
+      </p>
+    </div>
+  </div>
+</div>

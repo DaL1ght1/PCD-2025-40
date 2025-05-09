@@ -1,0 +1,50 @@
+.sortable {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .fas {
+    margin-left: 5px;
+  }
+}
+
+.pagination {
+  .page-item {
+    &.active .page-link {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .page-link {
+      color: var(--primary-color);
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(var(--primary-color-rgb), 0.25);
+      }
+    }
+  }
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  .card-header {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  }
+}
+
+.table {
+  th {
+    font-weight: 600;
+    color: #495057;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}

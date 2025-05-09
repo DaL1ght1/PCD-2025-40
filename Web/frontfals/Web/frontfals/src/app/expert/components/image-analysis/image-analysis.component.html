@@ -1,0 +1,201 @@
+<div class="container-fluid forensic-workspace">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center forensic-header">
+        <h2><i class="fas fa-microscope me-2"></i>Forensic Image Analysis</h2>
+        <!-- Add back button if this isn't a top-level page -->
+        <!-- <button class="btn btn-outline-secondary" routerLink="/expert">
+         <i class="fas fa-arrow-left me-2"></i> Back
+       </button> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card case-card">
+        <div class="card-header forensic-card-header">
+          <h5><i class="fas fa-folder-open me-2"></i>Case Files</h5>
+        </div>
+        <div class="card-body p-0">
+          <div *ngIf="loading && !errorMessage" class="text-center p-3">
+            <app-loading-spinner message="Loading cases..."></app-loading-spinner>
+          </div>
+          <div *ngIf="errorMessage && !loading" class="alert alert-danger m-3">{{ errorMessage }}</div>
+
+
+          <ul class="list-group list-group-flush case-list" *ngIf="!loading && !errorMessage">
+            <!-- Use CaseDTO properties -->
+            <li *ngFor="let case of cases"
+                class="list-group-item list-group-item-action cursor-pointer"
+                [class.active]="selectedCase?.id === case.id"
+                (click)="onCaseSelect(case.id)">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-bold">{{ case.title }}</div>
+                  <small><i class="fas fa-calendar-alt me-1"></i>{{ case.createdAt | date:'shortDate' }}</small>
+                </div>
+                <app-status-badge [status]="case.status"></app-status-badge>
+              </div>
+            </li>
+            <li *ngIf="cases.length === 0 && !loading && !errorMessage" class="list-group-item text-center">
+              <i class="fas fa-info-circle me-2"></i>No cases assigned to you
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="card case-details-card mb-4" *ngIf="selectedCase">
+        <div class="card-header forensic-card-header">
+          <!-- Use CaseDTO properties -->
+          <h5><i class="fas fa-briefcase me-2"></i>Case: {{ selectedCase.title }} <span class="case-number">{{ selectedCase.caseNumber }}</span></h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="case-description">
+                <p><strong><i class="fas fa-file-alt me-2"></i>Description:</strong> {{ selectedCase.description || 'No description provided' }}</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <!-- Use CaseDTO properties -->
+              <div class="case-metadata">
+                <p><strong><i class="fas fa-tag me-2"></i>Status:</strong> <app-status-badge [status]="selectedCase.status"></app-status-badge></p>
+                <p><strong><i class="fas fa-user-shield me-2"></i>Investigator ID:</strong> {{ selectedCase.investigatorId }}</p>
+                <p><strong><i class="fas fa-calendar-check me-2"></i>Submission Date:</strong> {{ selectedCase.createdAt | date:'mediumDate' }}</p>
+                <p *ngIf="selectedCase.assignedExpertId"><strong><i class="fas fa-user-tie me-2"></i>Expert ID:</strong> {{ selectedCase.assignedExpertId }}</p>
+                <p *ngIf="selectedCase.imageIds?.length > 0"><strong><i class="fas fa-images me-2"></i>Evidence Images:</strong> {{ selectedCase.imageIds.length }}</p>
+                <p *ngIf="selectedCase.analysisIds?.length > 0"><strong><i class="fas fa-chart-bar me-2"></i>Analysis Reports:</strong> {{ selectedCase.analysisIds.length }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="selectedCase">
+        <div class="col-md-4">
+          <div class="card evidence-card">
+            <div class="card-header forensic-card-header">
+              <h5><i class="fas fa-images me-2"></i>Evidence Images</h5>
+            </div>
+            <div class="card-body p-0">
+              <div *ngIf="loading && selectedCase" class="text-center p-3">
+                <app-loading-spinner message="Loading evidence..."></app-loading-spinner>
+              </div>
+              <div *ngIf="images.length === 0 && !loading && selectedCase" class="text-center p-3 no-evidence">
+                <i class="fas fa-camera-retro fa-2x mb-2"></i>
+                <p>No evidence images available for this case.</p>
+              </div>
+
+
+              <ul class="list-group list-group-flush evidence-list" *ngIf="!loading || images.length > 0">
+                <li *ngFor="let image of images"
+                    class="list-group-item list-group-item-action cursor-pointer"
+                    [class.active]="selectedImage?.id === image.id"
+                    (click)="onImageSelect(image)">
+                  <div class="d-flex align-items-center">
+                    <div class="image-thumbnail me-3">
+                      <img [src]="image.url" [alt]="image.filename">
+                    </div>
+                    <div>
+                      <div class="fw-bold">{{ image.filename }}</div>
+                      <small><i class="fas fa-clock me-1"></i>{{ image.uploadDate | date:'shortDate' }}</small>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="card analysis-card" *ngIf="selectedImage">
+            <div class="card-header forensic-card-header d-flex justify-content-between align-items-center">
+              <h5><i class="fas fa-search me-2"></i>Forensic Analysis</h5>
+              <div>
+                <button class="btn btn-sm btn-analysis" [disabled]="analyzing" (click)="analyzeImage()">
+                  <span *ngIf="analyzing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  <i *ngIf="!analyzing" class="fas fa-microscope me-2"></i>
+                  Run Analysis
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="image-preview mb-3">
+                    <img [src]="selectedImage.url" [alt]="selectedImage.filename">
+                    <div class="image-overlay">
+                      <div class="image-controls">
+                        <button class="btn btn-sm btn-dark"><i class="fas fa-search-plus"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="evidence-details">
+                    <h6><i class="fas fa-info-circle me-2"></i>Evidence Details</h6>
+                    <!-- Use ImageDetails properties -->
+                    <div class="detail-item">
+                      <span class="detail-label"><i class="fas fa-file me-1"></i>Filename:</span>
+                      <span class="detail-value">{{ selectedImage.filename }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label"><i class="fas fa-user me-1"></i>Uploaded By:</span>
+                      <span class="detail-value">{{ selectedImage.uploadedBy }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label"><i class="fas fa-calendar me-1"></i>Upload Date:</span>
+                      <span class="detail-value">{{ selectedImage.uploadDate | date:'mediumDate' }}</span>
+                    </div>
+                  </div>
+
+                  <h6 class="mt-4"><i class="fas fa-chart-line me-2"></i>Analysis Results</h6>
+                  <!-- Display list of analyses from imageDetails -->
+                  <div *ngIf="selectedImage.analysisResults && selectedImage.analysisResults.length > 0" class="analysis-results">
+                    <div *ngFor="let analysis of selectedImage.analysisResults" class="analysis-result mb-3">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <!-- Use AnalysisDto properties -->
+                          <span class="analysis-type"><i class="fas fa-vial me-1"></i>{{ getAnalysisType(analysis) }}</span>
+                          <span class="analysis-date"><i class="fas fa-clock me-1"></i>{{ getAnalysisDate(analysis) | date:'short' }}</span>
+                        </div>
+                        <div>
+                          <!-- Use AnalysisDto properties -->
+                          <span class="badge" [ngClass]="getIsFalsified(analysis) ? 'bg-danger' : 'bg-success'">
+                             <i [class]="getIsFalsified(analysis) ? 'fas fa-times-circle me-1' : 'fas fa-check-circle me-1'"></i>
+                            {{ getIsFalsified(analysis) ? 'Falsified' : 'Authentic' }}
+                          </span>
+                          <span class="confidence-score ms-2">{{ getConfidenceScore(analysis) | percent }}</span>
+                        </div>
+                      </div>
+                      <!-- Link to analysis detail page -->
+                      <a class="view-details-link" [routerLink]="['/expert/analysis', getAnalysisId(analysis)]">
+                        <i class="fas fa-external-link-alt me-1"></i> View Detailed Report
+                      </a>
+                    </div>
+                  </div>
+                  <div *ngIf="!selectedImage.analysisResults || selectedImage.analysisResults.length === 0" class="text-center p-3 no-analysis">
+                    <i class="fas fa-flask fa-2x mb-2"></i>
+                    <p>No analysis results available for this evidence</p>
+                    <p class="text-muted small">Click "Run Analysis" to perform forensic tests</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card placeholder-card" *ngIf="!selectedImage">
+            <div class="card-body text-center">
+              <i class="fas fa-camera fa-3x mb-3 text-muted"></i>
+              <p>Select an evidence image to analyze</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

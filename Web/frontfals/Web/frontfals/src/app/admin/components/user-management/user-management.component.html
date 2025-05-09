@@ -1,0 +1,139 @@
+<div class="user-management-container">
+  <div class="page-header">
+    <h1 class="page-title">User Management</h1>
+    <div class="header-actions">
+      <button class="bulk-delete-btn" *ngIf="selectedUsers.length > 0" (click)="bulkDeleteUsers()">
+        <i class="fas fa-trash-alt"></i>
+        Delete Selected ({{ selectedUsers.length }})
+      </button>
+      <button class="add-user-btn" (click)="openAddUserModal()">
+        <i class="fas fa-plus"></i>
+        Add User
+      </button>
+    </div>
+  </div>
+
+  <div class="search-container">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search users by name, email, or role..."
+      [(ngModel)]="searchQuery"
+      (input)="applyFilter()"
+    >
+    <i class="fas fa-search search-icon"></i>
+  </div>
+
+  <div class="users-table-container">
+    <!-- Loading indicator -->
+    <div class="loading-overlay" *ngIf="isLoading || isProcessing">
+      <div class="spinner"></div>
+      <p>{{ isLoading ? 'Loading users...' : 'Processing...' }}</p>
+    </div>
+
+    <table class="users-table" *ngIf="filteredUsers.length > 0">
+      <thead>
+      <tr>
+        <th class="checkbox-column">
+          <div class="custom-checkbox">
+            <input
+              type="checkbox"
+              id="selectAll"
+              [checked]="selectedUsers.length === paginatedUsers.length && paginatedUsers.length > 0"
+              (change)="selectAllUsers()"
+            >
+            <span class="checkbox-display"></span>
+          </div>
+        </th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of paginatedUsers" [class.selected]="isUserSelected(user.id)">
+        <td class="checkbox-column">
+          <div class="custom-checkbox">
+            <input
+              type="checkbox"
+              [id]="'select-' + user.id"
+              [checked]="isUserSelected(user.id)"
+              (change)="toggleUserSelection(user.id, $event)"
+            >
+            <span class="checkbox-display"></span>
+          </div>
+        </td>
+        <td class="user-id">{{ user.id }}</td>
+        <td class="user-name">{{ user.firstname }} {{ user.lastname }}</td>
+        <td class="user-email">{{ user.email }}</td>
+        <td>
+            <span class="user-role" [ngClass]="'role-' + user.role[0].toLowerCase().replace('role_', '')">
+              {{ formatRole(user.role[0]) }}
+            </span>
+        </td>
+        <td>
+            <span class="user-status" [ngClass]="'status-' + user.enabled">
+              {{ user.enabled ? 'Active' : 'Inactive' }}
+            </span>
+        </td>
+        <td class="user-created">{{ user.createdAt | date:'MMM d, y' }}</td>
+        <td class="user-actions">
+          <button class="action-btn edit-btn" matTooltip="Edit User" (click)="editUser(user)">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="action-btn delete-btn" matTooltip="Delete User" (click)="deleteUser(user)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="filteredUsers.length === 0 && !isLoading">
+      <i class="fas fa-users empty-icon"></i>
+      <h2 class="empty-title">No users found</h2>
+      <p class="empty-description">
+        {{ searchQuery ? 'No users match your search criteria.' : 'There are no users in the system yet.' }}
+      </p>
+      <button class="add-user-btn" (click)="openAddUserModal()">
+        <i class="fas fa-plus"></i>
+        Add User
+      </button>
+    </div>
+
+    <div class="table-footer" *ngIf="filteredUsers.length > 0">
+      <div class="items-per-page">
+        <span>Items per page:</span>
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+        </select>
+      </div>
+
+      <div class="pagination-info">
+        {{ (currentPage - 1) * pageSize + 1 }} - {{ Math.min(currentPage * pageSize, filteredUsers.length) }} of {{ filteredUsers.length }}
+      </div>
+
+      <div class="pagination-controls">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="goToFirstPage()">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPreviousPage()">
+          <i class="fas fa-angle-left"></i>
+        </button>
+        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToNextPage()">
+          <i class="fas fa-angle-right"></i>
+        </button>
+        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToLastPage()">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

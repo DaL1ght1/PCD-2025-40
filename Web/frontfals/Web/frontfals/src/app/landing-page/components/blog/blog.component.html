@@ -1,0 +1,70 @@
+<div class="page-container case-studies-page">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">FIDS Case Studies</h1>
+      <p class="page-description">
+        Real-world examples of how FIDS helps uncover the truth in visual evidence.
+      </p>
+    </div>
+  </header>
+
+  <section class="case-studies-section">
+    <div class="container">
+      <!-- Optional: Add filters later if needed -->
+      <!-- <div class="filter-bar"> ... </div> -->
+
+      <div class="case-studies-grid" *ngIf="caseStudies.length > 0; else noStudies">
+        <div class="case-study-card" *ngFor="let study of caseStudies">
+          <div class="card-image">
+            <img [ngSrc]="study.image" [alt]="study.title" width="400" height="250"> <!-- Use NgOptimizedImage -->
+          </div>
+          <div class="card-content">
+            <div class="card-tags">
+              <span class="tag" *ngFor="let tag of study.tags">{{ tag }}</span>
+            </div>
+            <h2 class="card-title">{{ study.title }}</h2>
+            <div class="card-section">
+              <h3>The Challenge</h3>
+              <p>{{ study.challenge }}</p>
+            </div>
+            <div class="card-section">
+              <h3>FIDS Solution</h3>
+              <p>{{ study.solution }}</p>
+            </div>
+            <div class="card-section outcome">
+              <h3>Outcome</h3>
+              <p>{{ study.outcome }}</p>
+            </div>
+            <a [routerLink]="'/case-studies/' + study.id" class="read-more">
+              Read Full Study
+              <i class="material-icons">arrow_forward</i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noStudies>
+        <div class="no-results">
+          <p>No case studies available at this time. Check back soon!</p>
+        </div>
+      </ng-template>
+
+      <!-- Optional: Add pagination if you have many case studies -->
+      <!-- <div class="pagination"> ... </div> -->
+
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>See FIDS in Action</h2>
+        <p>Request a personalized demo to see how FIDS can address your specific image verification needs.</p>
+        <div class="cta-buttons">
+          <a routerLink="/demo" class="btn btn-primary">Request a Demo</a>
+          <a routerLink="/contact" class="btn btn-outline">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

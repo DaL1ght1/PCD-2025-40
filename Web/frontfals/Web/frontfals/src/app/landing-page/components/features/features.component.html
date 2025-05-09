@@ -1,0 +1,41 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">Advanced Detection Features</h1>
+      <p class="page-description">
+        Our comprehensive suite of falsification detection tools provides everything
+        legal professionals need to identify manipulated images.
+      </p>
+    </div>
+  </header>
+
+  <section class="features-section">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of features">
+          <div class="feature-header">
+            <div class="feature-icon">
+              <i class="material-icons">{{feature.icon}}</i>
+            </div>
+            <h2 class="feature-title">{{feature.title}}</h2>
+          </div>
+          <p class="feature-description">{{feature.description}}</p>
+          <p class="feature-details">{{feature.details}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to experience these features?</h2>
+        <p>Start your free trial today and see how FIDS can transform your image verification process.</p>
+        <div class="cta-buttons">
+          <a routerLink="/register" class="btn btn-primary">Start Free Trial</a>
+          <a routerLink="/demo" class="btn btn-outline">Request Demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

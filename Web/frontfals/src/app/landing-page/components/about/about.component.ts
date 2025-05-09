@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, NgOptimizedImage]
+  imports: [CommonModule, RouterModule]
 })
 export class AboutComponent {
   milestones = [

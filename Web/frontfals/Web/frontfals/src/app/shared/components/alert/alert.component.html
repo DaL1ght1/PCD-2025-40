@@ -1,0 +1,13 @@
+<div *ngIf="visible" class="alert" [ngClass]="'alert-' + type" role="alert">
+  <div class="d-flex align-items-center">
+    <i *ngIf="type === 'success'" class="fas fa-check-circle me-2"></i>
+    <i *ngIf="type === 'info'" class="fas fa-info-circle me-2"></i>
+    <i *ngIf="type === 'warning'" class="fas fa-exclamation-triangle me-2"></i>
+    <i *ngIf="type === 'danger'" class="fas fa-exclamation-circle me-2"></i>
+    <div>
+      <strong *ngIf="title">{{ title }}</strong>
+      <span>{{ message }}</span>
+    </div>
+  </div>
+  <button *ngIf="dismissible" type="button" class="btn-close" (click)="close()" aria-label="Close"></button>
+</div>

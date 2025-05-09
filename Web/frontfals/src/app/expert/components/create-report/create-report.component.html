@@ -118,7 +118,7 @@
                        (blur)="markFieldAsChecked('analysisIds')"
                 >
                 <label class="form-check-label" for="analysis-{{ analysis.id }}">
-                  {{ analysis.analysisType | titlecase }} - Date: {{ analysis.date | date:'shortDate' }}
+                  {{ analysis.analysisType | titlecase }} - Date: {{ analysis.analysisDate | date:'shortDate' }}
                   <app-status-badge [status]="analysis.isFalsified ? 'Falsified' : 'Authentic'"></app-status-badge>
                 </label>
               </div>

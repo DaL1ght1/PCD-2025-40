@@ -1,0 +1,37 @@
+<div class="file-upload">
+  <div class="file-upload-dropzone"
+       [ngClass]="{'active': isDragging}"
+       (dragover)="onDragOver($event)"
+       (dragleave)="onDragLeave($event)"
+       (drop)="onDrop($event)">
+    <div class="file-upload-content">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p>{{ placeholder }}</p>
+      <button type="button" class="btn btn-outline-primary" (click)="fileInput.click()">
+        Browse Files
+      </button>
+    </div>
+  </div>
+
+  <input type="file"
+         #fileInput
+         [multiple]="multiple"
+         [accept]="accept"
+         (change)="onFileSelected($event)"
+         style="display: none;">
+
+  <div class="file-list" *ngIf="files.length > 0">
+    <div class="file-item" *ngFor="let file of files; let i = index">
+      <div class="file-info">
+        <i class="fas fa-file"></i>
+        <div class="file-details">
+          <span class="file-name">{{ file.name }}</span>
+          <span class="file-size">{{ formatFileSize(file.size) }}</span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeFile(i)">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>

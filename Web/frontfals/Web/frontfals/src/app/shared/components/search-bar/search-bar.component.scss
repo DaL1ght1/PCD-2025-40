@@ -1,0 +1,20 @@
+.search-bar {
+  margin-bottom: 20px;
+
+  .input-group-text {
+    background-color: #fff;
+    border-right: none;
+  }
+
+  .form-control {
+    border-left: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .btn {
+    border-color: #ced4da;
+  }
+}

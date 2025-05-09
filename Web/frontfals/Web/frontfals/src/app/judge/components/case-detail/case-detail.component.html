@@ -1,0 +1,455 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Case Details</h2>
+        <div>
+          <button class="btn btn-outline-secondary me-2" routerLink="/judge/reports">
+            <i class="fas fa-arrow-left me-2"></i> Back to Cases
+          </button>
+          <button *ngIf="canSubmitDecision()" class="btn btn-primary" (click)="toggleDecisionForm()">
+            <i class="fas fa-gavel me-2"></i> Make Decision
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-5">
+    <app-loading-spinner message="Loading case details..."></app-loading-spinner>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Case Details -->
+  <div *ngIf="!loading && !error">
+    <div *ngIf="caseData; else noCaseFound">
+      <!-- Decision Form -->
+      <div *ngIf="showDecisionForm" class="row mb-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>Judicial Decision</h5>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="decisionForm" (ngSubmit)="submitDecision()">
+                <div class="mb-3">
+                  <label for="verdict" class="form-label">Verdict</label>
+                  <select id="verdict" formControlName="verdict" class="form-select"
+                          [class.is-invalid]="decisionForm.get('verdict')?.invalid && (decisionForm.get('verdict')?.dirty || formSubmitted)">
+                    <option value="">Select a verdict</option>
+                    <option value="Authentic">Authentic</option>
+                    <option value="Falsified">Falsified</option>
+                    <option value="Inconclusive">Inconclusive</option>
+                  </select>
+                  <div
+                    *ngIf="decisionForm.get('verdict')?.invalid && (decisionForm.get('verdict')?.dirty || formSubmitted)"
+                    class="invalid-feedback">
+                    Verdict is required
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="judicialNotes" class="form-label">Judicial Notes</label>
+                  <textarea id="judicialNotes" formControlName="judicialNotes" class="form-control" rows="5"
+                            [class.is-invalid]="decisionForm.get('judicialNotes')?.invalid && (decisionForm.get('judicialNotes')?.dirty || formSubmitted)"
+                            placeholder="Provide detailed reasoning for your decision..."></textarea>
+                  <div
+                    *ngIf="decisionForm.get('judicialNotes')?.invalid && (decisionForm.get('judicialNotes')?.dirty || formSubmitted)"
+                    class="invalid-feedback">
+                    <div *ngIf="decisionForm.get('judicialNotes')?.errors?.['required']">Judicial notes are required
+                    </div>
+                    <div *ngIf="decisionForm.get('judicialNotes')?.errors?.['minlength']">Notes must be at least 10
+                      characters
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="button" class="btn btn-outline-secondary me-2" (click)="toggleDecisionForm()">Cancel
+                  </button>
+                  <button type="submit" class="btn btn-primary" [disabled]="decisionForm.invalid || submitting">
+                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status"
+                          aria-hidden="true"></span>
+                    Submit Decision
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5>{{ caseData.title }}</h5>
+              <app-status-badge [status]="caseData.status"></app-status-badge>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Case ID:</strong> {{ caseData.id }}</p>
+                  <p><strong>Case Number:</strong> {{ caseData.caseNumber }}</p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Investigator ID:</strong> {{ caseData.investigatorId || "Unknown" }}</p>
+                  <p><strong>Submission Date:</strong> {{ caseData.createdAt | date: "medium" }}</p>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <h6>Description</h6>
+                <p>{{ caseData.description || "No description available" }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Judicial Decision Section (if available) -->
+          <div *ngIf="caseData.verdict" class="card mb-4">
+            <div class="card-header">
+              <h5>Judicial Decision</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <h6>Verdict</h6>
+                <span class="badge" [ngClass]="getVerdictClass(caseData.verdict)">
+                  {{ caseData.verdict }}
+                </span>
+              </div>
+              <div class="mb-3">
+                <h6>Decision Date</h6>
+                <p>{{ caseData.closedAt ? (caseData.closedAt | date: "medium") : "Not available" }}</p>
+              </div>
+              <div>
+                <h6>Judicial Notes</h6>
+                <p>{{ caseData.judicialNotes || "No notes available" }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Reports Section -->
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5>Case Reports</h5>
+              <div>
+                <button *ngIf="caseReports.length >= 2" class="btn btn-sm btn-outline-primary"
+                        (click)="toggleComparisonForm()">
+                  <i class="fas fa-exchange-alt me-1"></i> Compare Reports
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Loading spinner for reports -->
+              <div *ngIf="loadingReports" class="text-center p-3">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading reports...</span>
+                </div>
+                <p class="mt-2">Loading case reports...</p>
+              </div>
+
+              <!-- Error message for reports -->
+              <div *ngIf="reportError" class="alert alert-danger">
+                {{ reportError }}
+              </div>
+
+              <!-- Debug info -->
+<!--              <div *ngIf="!loadingReports && !reportError" class="mb-3 p-2 bg-light border">-->
+<!--                <p class="mb-1"><strong>Debug Info:</strong></p>-->
+<!--                <p class="mb-1">Reports loaded: {{ caseReports.length }}</p>-->
+<!--                <p class="mb-0">Report types: {{ caseReports | json }}</p>-->
+<!--              </div>-->
+
+              <!-- No reports message -->
+              <div *ngIf="!loadingReports && !reportError && caseReports.length === 0" class="text-center p-3">
+                <p>No reports available for this case</p>
+              </div>
+
+              <!-- Report Comparison Form -->
+              <div *ngIf="showComparisonForm" class="mb-4">
+                <div class="card border-primary">
+                  <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">Compare Reports</h6>
+                  </div>
+                  <div class="card-body">
+                    <form [formGroup]="comparisonForm" (ngSubmit)="compareReports()">
+                      <div class="row">
+                        <div class="col-md-5">
+                          <div class="mb-3">
+                            <label for="reportId1" class="form-label">First Report</label>
+                            <select id="reportId1" formControlName="reportId1" class="form-select">
+                              <option value="">Select a report</option>
+                              <option *ngFor="let report of caseReports" [value]="report.id">
+                                {{ report.title }} ({{ getReportTypeLabel(report.reportType) }})
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="mb-3">
+                            <label for="reportId2" class="form-label">Second Report</label>
+                            <select id="reportId2" formControlName="reportId2" class="form-select">
+                              <option value="">Select a report</option>
+                              <option *ngFor="let report of caseReports" [value]="report.id">
+                                {{ report.title }} ({{ getReportTypeLabel(report.reportType) }})
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                          <button type="submit" class="btn btn-primary w-100"
+                                  [disabled]="comparisonForm.invalid || loadingComparison">
+                            <span *ngIf="loadingComparison" class="spinner-border spinner-border-sm me-2" role="status"
+                                  aria-hidden="true"></span>
+                            Compare
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+
+                    <!-- Comparison Error -->
+                    <div *ngIf="comparisonError" class="alert alert-danger mt-3">
+                      {{ comparisonError }}
+                    </div>
+
+                    <!-- Comparison Results -->
+                    <div *ngIf="comparisonResult" class="mt-3">
+                      <h6 class="border-bottom pb-2">Comparison Results</h6>
+
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <strong>Same Case:</strong>
+                            <span [ngClass]="comparisonResult.sameCaseId ? 'text-success' : 'text-danger'">
+                              {{ comparisonResult.sameCaseId ? 'Yes' : 'No' }}
+                            </span>
+                          </div>
+                          <div class="mb-3">
+                            <strong>Same Expert:</strong>
+                            <span [ngClass]="comparisonResult.sameExpert ? 'text-success' : 'text-danger'">
+                              {{ comparisonResult.sameExpert ? 'Yes' : 'No' }}
+                            </span>
+                          </div>
+                          <div class="mb-3">
+                            <strong>Same Verdict:</strong>
+                            <span [ngClass]="comparisonResult.sameVerdict ? 'text-success' : 'text-danger'">
+                              {{ comparisonResult.sameVerdict ? 'Yes' : 'No' }}
+                            </span>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <strong>Common Findings:</strong>
+                            <span class="badge bg-success me-1" *ngFor="let finding of comparisonResult.commonFindings">
+                              {{ finding }}
+                            </span>
+                            <span *ngIf="comparisonResult.commonFindings.length === 0" class="text-muted">None</span>
+                          </div>
+                          <div class="mb-3">
+                            <strong>Unique to Report 1:</strong>
+                            <span class="badge bg-info me-1"
+                                  *ngFor="let finding of comparisonResult.uniqueFindingsReport1">
+                              {{ finding }}
+                            </span>
+                            <span *ngIf="comparisonResult.uniqueFindingsReport1.length === 0"
+                                  class="text-muted">None</span>
+                          </div>
+                          <div class="mb-3">
+                            <strong>Unique to Report 2:</strong>
+                            <span class="badge bg-warning me-1"
+                                  *ngFor="let finding of comparisonResult.uniqueFindingsReport2">
+                              {{ finding }}
+                            </span>
+                            <span *ngIf="comparisonResult.uniqueFindingsReport2.length === 0"
+                                  class="text-muted">None</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex justify-content-end mt-3">
+                        <button type="button" class="btn btn-outline-secondary" (click)="toggleComparisonForm()">
+                          Close Comparison
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reports List -->
+              <!-- Reports List with Manual Accordion -->
+              <div *ngIf="!loadingReports && !reportError && caseReports.length > 0" class="accordion" id="reportsAccordion">
+                <div *ngFor="let report of caseReports; let i = index" class="accordion-item mb-2 border">
+                  <h2 class="accordion-header" [id]="'heading' + i">
+                    <button class="accordion-button collapsed" type="button" (click)="toggleReportAccordion(i)"
+                            [attr.aria-expanded]="accordionStates[i] || false"
+                            [attr.aria-controls]="'collapse' + i">
+                      <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                        <span>{{ report.title || 'Report ' + (i + 1) }}</span>
+                        <span class="badge ms-2" [ngClass]="getReportTypeClass(report.reportType)">
+            {{ getReportTypeLabel(report.reportType) }}
+          </span>
+                      </div>
+                    </button>
+                  </h2>
+                  <div [id]="'collapse' + i" class="accordion-collapse collapse" [ngClass]="{'show': accordionStates[i]}"
+                       [attr.aria-labelledby]="'heading' + i">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p><strong>Report ID:</strong> {{ report.id }}</p>
+                          <p><strong>Created:</strong> {{ report.createdAt | date: 'medium' }}</p>
+                          <p *ngIf="report.updatedAt"><strong>Updated:</strong> {{ report.updatedAt | date: 'medium' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                          <p *ngIf="report.investigatorId"><strong>Investigator:</strong> {{ report.investigatorId }}</p>
+                          <p *ngIf="report.expertId"><strong>Expert:</strong> {{ report.expertId }}</p>
+                          <p *ngIf="report.generatedBy"><strong>Generated By:</strong> {{ report.generatedBy }}</p>
+                        </div>
+                      </div>
+
+                      <div class="mt-3" *ngIf="report.description">
+                        <h6>Description</h6>
+                        <p>{{ report.description }}</p>
+                      </div>
+
+                      <div class="mt-3" *ngIf="report.verdict">
+                        <h6>Verdict</h6>
+                        <span class="badge" [ngClass]="getVerdictClass(report.verdict)">
+            {{ report.verdict }}
+          </span>
+                        <div *ngIf="report.judicialNotes" class="mt-2">
+                          <h6>Judicial Notes</h6>
+                          <p>{{ report.judicialNotes }}</p>
+                        </div>
+                      </div>
+
+                      <div class="mt-3" *ngIf="report.analyses && report.analyses.length > 0">
+                        <h6>Analyses</h6>
+                        <div class="table-responsive">
+                          <table class="table table-sm table-bordered">
+                            <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Result</th>
+                              <th>Confidence</th>
+                              <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let analysis of report.analyses">
+                              <td>{{ analysis['analysisType'] }}</td>
+                              <td>
+                    <span class="badge" [ngClass]="analysis['isFalsified'] ? 'bg-danger' : 'bg-success'">
+                      {{ analysis['isFalsified'] ? 'Falsified' : 'Authentic' }}
+                    </span>
+                              </td>
+                              <td>{{ analysis['confidenceScore'] * 100 | number: '1.0-1' }}%</td>
+                              <td>{{ analysis['analysisDate'] | date }}</td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="d-flex justify-content-end mt-3">
+                        <button *ngIf="report.pdfUrl" class="btn btn-sm btn-outline-primary" (click)="viewReportPdf(report.pdfUrl)">
+                          <i class="fas fa-file-pdf me-1"></i> View PDF
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5>Case Images</h5>
+            </div>
+            <div class="card-body">
+              <!-- Loading spinner for images -->
+              <div *ngIf="loadingImages" class="text-center p-3">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading images...</span>
+                </div>
+                <p class="mt-2">Loading case images...</p>
+              </div>
+
+              <!-- Error message for images -->
+              <div *ngIf="imageError" class="alert alert-danger">
+                {{ imageError }}
+              </div>
+
+              <!-- No images message -->
+              <div *ngIf="!loadingImages && !imageError && caseImages.length === 0" class="text-center p-3">
+                <p>No images available for this case</p>
+              </div>
+
+              <!-- Images display -->
+              <div *ngIf="!loadingImages && !imageError && caseImages.length > 0" class="row">
+                <div *ngFor="let image of caseImages" class="col-md-6 mb-3">
+                  <div class="card">
+                    <div class="card-img-top image-preview position-relative">
+                      <!-- Loading spinner for image -->
+                      <div *ngIf="imageLoadingStates[image.id]"
+                           class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-light bg-opacity-75">
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+
+                      <!-- Error message if image fails to load -->
+                      <div *ngIf="imageErrors[image.id]"
+                           class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-light bg-opacity-75">
+                        <div class="text-danger">
+                          <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                          <p class="mb-0">Image not available</p>
+                        </div>
+                      </div>
+
+                      <img
+                        [src]="image.url"
+                        [alt]="image.filename || 'Case Image'"
+                        (load)="onImageLoad(image.id)"
+                        (error)="onImageError($event, image.id)"
+                        class="img-fluid"
+                      />
+                    </div>
+                    <div class="card-body">
+                      <h6 class="text-truncate"
+                          title="{{ image.filename }}">{{ image.filename || 'Image ' + image.id }}</h6>
+                      <p class="small text-muted mb-2">Uploaded: {{ image.uploadDate | date }}</p>
+                      <button class="btn btn-sm btn-outline-primary w-100 mt-2"
+                              [routerLink]="['/image-analysis', image.id]">
+                        View Analysis
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fallback for when caseData is null -->
+    <ng-template #noCaseFound>
+      <div class="text-center p-4">
+        <p>Case not found or an error occurred.</p>
+        <button class="btn btn-primary" routerLink="/judge/reports">
+          Back to Cases
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</div>

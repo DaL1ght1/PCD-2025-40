@@ -1,0 +1,14 @@
+<div class="app-container">
+  <!-- Only show sidebar when logged in -->
+  <app-sidebar *ngIf="authService.isAuthenticated()"></app-sidebar>
+
+  <div class="main-content" [ngClass]="{'sidebar-expanded': sidebarVisible && !isLandingPage, 'sidebar-collapsed': !sidebarVisible && !isLandingPage}">
+    <!-- Top toolbar when authenticated -->
+    <app-toolbar *ngIf="authService.isAuthenticated()" [title]="title"></app-toolbar>
+
+    <!-- Your routed views go here -->
+    <div class="content-wrapper" >
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

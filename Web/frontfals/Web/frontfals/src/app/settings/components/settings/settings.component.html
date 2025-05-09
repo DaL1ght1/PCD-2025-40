@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-10 mx-auto">
+      <h2>Settings</h2>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Notification Settings</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="notificationSettings" (ngSubmit)="saveNotificationSettings()">
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="emailNotifications" formControlName="emailNotifications">
+              <label class="form-check-label" for="emailNotifications">Email Notifications</label>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="caseUpdates" formControlName="caseUpdates">
+              <label class="form-check-label" for="caseUpdates">Case Updates</label>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="analysisCompleted" formControlName="analysisCompleted">
+              <label class="form-check-label" for="analysisCompleted">Analysis Completed</label>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="systemAnnouncements" formControlName="systemAnnouncements">
+              <label class="form-check-label" for="systemAnnouncements">System Announcements</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Save Notification Settings
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h5>Security Settings</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="securitySettings" (ngSubmit)="saveSecuritySettings()">
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="twoFactorAuth" formControlName="twoFactorAuth">
+              <label class="form-check-label" for="twoFactorAuth">Enable Two-Factor Authentication</label>
+            </div>
+
+            <div class="mb-3">
+              <label for="sessionTimeout" class="form-label">Session Timeout (minutes)</label>
+              <select class="form-select" id="sessionTimeout" formControlName="sessionTimeout">
+                <option value="15">15 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="120">2 hours</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Save Security Settings
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

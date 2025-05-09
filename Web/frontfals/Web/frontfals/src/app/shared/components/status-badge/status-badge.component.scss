@@ -1,0 +1,68 @@
+/* Base styles for all badges */
+.badge {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  background-color: var(--gray-color); /* Default background for unrecognized statuses */
+  color: #fff; /* Default text color for all badges */
+}
+
+/* Specific badge styles */
+.badge-pending {
+  background-color: var(--warning-color);
+}
+
+.badge-assigned {
+  background-color: var(--info-color);
+}
+
+.badge-in-progress {
+  background-color: var(--info-color);
+}
+
+.badge-analysis-complete {
+  background-color: var(--success-color);
+}
+
+.badge-under-review {
+  background-color: var(--warning-color);
+}
+
+.badge-completed {
+  background-color: var(--success-color);
+}
+
+.badge-rejected {
+  background-color: var(--error-color);
+}
+
+.badge-archived {
+  background-color: var(--info-color);
+}
+
+.badge-active {
+  background-color: var(--success-color);
+}
+
+.badge-inactive {
+  color: var(--primary-light);
+  background-color: var(--gray-color);
+}
+
+.badge-suspended {
+  background-color: var(--warning-color);
+}
+
+.badge-authentic {
+  background-color: var(--success-color);
+}
+
+.badge-falsified {
+  background-color: var(--error-color);
+}
+
+.badge-inconclusive {
+  background-color: var(--warning-color);
+}

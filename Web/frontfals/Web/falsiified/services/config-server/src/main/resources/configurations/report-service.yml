@@ -1,0 +1,41 @@
+spring:
+  data:
+    mongodb:
+      database: Images
+      username: admin
+      password: admin
+      host: localhost
+      port: 27017
+      authentication-database: admin
+
+
+
+
+
+server:
+  port: 8053
+
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  kafka:
+    topics:
+      analysis-completed: analysis-completed-topic
+  report:
+    scheduling:
+      cron: 0 0 0 * * ?  # Midnight every day
+    export:
+      base-url: ${app.api-gateway-url:http://localhost:8222}/api/v1/reports/export
+
+templates:
+  directory: D:/Work-PCD/falsiified/services/report-service/src/main/resources/templates
+
+image-management-service:
+      url:  http://imageManagement-service:8050
+image-analysis-service:
+      url:  http://imageAnalysis-service:8051

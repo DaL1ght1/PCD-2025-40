@@ -150,23 +150,23 @@ export class CareersComponent {
   testimonials = [
     {
       quote: 'Working at FIDS has been the most rewarding experience of my career. I get to apply cutting-edge AI research to solve real-world problems that impact the justice system.',
-      name: 'Dr. Maya Patel',
+      name: 'Dr. Krifi Khalil',
       role: 'Lead Data Scientist',
-      avatar: 'assets/images/team/maya-patel.jpg',
+      avatar: 'assets/images/team/Krifi-Khalil.jpg',
       years: '3 years at FIDS'
     },
     {
       quote: "The culture at FIDS is unlike anywhere I've worked before. Everyone is passionate about our mission, and there's a genuine commitment to work-life balance and professional growth.",
-      name: 'Thomas Wright',
+      name: 'Mr. Souid Mohammed Aziz ',
       role: 'Senior Software Engineer',
-      avatar: 'assets/images/team/thomas-wright.jpg',
+      avatar: 'assets/images/team/Souid-Mohammed-Aziz.jpg',
       years: '2 years at FIDS'
     },
     {
       quote: 'As a former forensic analyst, joining FIDS allowed me to multiply my impact. Now I help build tools that empower thousands of legal professionals to find the truth in visual evidence.',
-      name: 'Sophia Kim',
+      name: 'Mrs Haddad Siwar',
       role: 'Product Manager',
-      avatar: 'assets/images/team/sophia-kim.jpg',
+      avatar: 'assets/images/team/Haddad-Siwar.jpg',
       years: '4 years at FIDS'
     }
   ];

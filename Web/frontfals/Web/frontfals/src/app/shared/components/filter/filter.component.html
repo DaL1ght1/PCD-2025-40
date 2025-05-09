@@ -1,0 +1,10 @@
+<div class="filter-container">
+  <div class="filter-header" (click)="toggleCollapse()">
+    <h6 class="mb-0">{{ title }}</h6>
+    <i class="fas" [ngClass]="isCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+  </div>
+
+  <div class="filter-body" [ngClass]="{'collapsed': isCollapsed}">
+    <ng-content></ng-content>
+  </div>
+</div>

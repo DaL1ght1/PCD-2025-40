@@ -1,0 +1,33 @@
+.filter-container {
+  padding: 16px;
+  min-width: 300px;
+}
+
+.filter-title {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filter-field {
+  width: 100%;
+}
+
+.date-range {
+  display: flex;
+  gap: 12px;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}

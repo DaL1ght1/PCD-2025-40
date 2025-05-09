@@ -1,0 +1,29 @@
+.sortable {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .fas {
+    margin-left: 5px;
+  }
+}
+
+.pagination {
+  .page-item {
+    &.active .page-link {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .page-link {
+      color: var(--primary-color);
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(var(--primary-color-rgb), 0.25);
+      }
+    }
+  }
+}

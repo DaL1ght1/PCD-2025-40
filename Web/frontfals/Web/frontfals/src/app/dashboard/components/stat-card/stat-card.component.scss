@@ -1,0 +1,41 @@
+.stat-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .icon-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.bg-primary-light {
+  background-color: rgba(63, 81, 181, 0.1);
+}
+
+.bg-info-light {
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.bg-success-light {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.bg-warning-light {
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+.bg-danger-light {
+  background-color: rgba(244, 67, 54, 0.1);
+}

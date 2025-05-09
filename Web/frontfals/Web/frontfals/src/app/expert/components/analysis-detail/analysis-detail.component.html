@@ -1,0 +1,124 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Analysis Details</h2>
+        <button class="btn btn-outline-secondary" (click)="goBack()">
+          <i class="fas fa-arrow-left me-2"></i> Back to Analysis
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+
+  <div *ngIf="!loading && analysis">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Image Information</h5>
+          </div>
+          <div class="card-body">
+            <div class="image-preview mb-3">
+              <img [src]="imageUrl" alt="Analyzed Image">
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Image ID:</strong> {{ imageId }}</p>
+                <p><strong>Filename:</strong> {{ imageDetails?.filename }}</p>
+                <p><strong>Upload Date:</strong> {{ imageDetails?.uploadDate | date }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Case ID:</strong> {{ id }}</p>
+                <p><strong>Uploaded By:</strong> {{ imageDetails?.uploadedBy }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Analysis Results</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <h6>Analysis Type: {{ analysis.analysisType }}</h6>
+                <span class="badge" [ngClass]="analysis.isFalsified ? 'bg-danger' : 'bg-success'">
+                  {{ analysis.isFalsified ? 'Falsified' : 'Authentic' }}
+                </span>
+              </div>
+              <p><strong>Analysis Date:</strong> {{ analysis.date | date:'medium' }}</p>
+              <p><strong>Analyzed By:</strong> {{ analysis.analyzedBy }}</p>
+              <p><strong>Confidence Score:</strong> {{ analysis.confidenceScore | percent }}</p>
+            </div>
+
+            <div class="mt-4">
+              <h6>Detailed Results</h6>
+              <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                  <thead>
+                  <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of detailedResults">
+                    <td>{{ item.key }}</td>
+                    <td>{{ item.value }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Expert Annotations</h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="annotations.length === 0" class="text-center p-3">
+              <p>No annotations available for this analysis</p>
+            </div>
+            <div *ngFor="let annotation of annotations" class="annotation-item mb-3">
+              <div class="d-flex justify-content-between">
+                <strong>{{ annotation.annotatedBy }}</strong>
+                <small>{{ annotation.annotationDate | date:'medium' }}</small>
+              </div>
+              <p>{{ annotation.content }}</p>
+            </div>
+
+            <form [formGroup]="annotationForm" (ngSubmit)="addAnnotation()" class="mt-4">
+              <div class="mb-3">
+                <label for="annotation" class="form-label">Add Annotation</label>
+                <textarea
+                  id="annotation"
+                  formControlName="content"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Add your expert observations here..."
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" [disabled]="annotationForm.invalid || submitting">
+                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Submit Annotation
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

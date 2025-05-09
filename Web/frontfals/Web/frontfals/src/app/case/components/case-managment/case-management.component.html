@@ -1,0 +1,130 @@
+<div class="case-management-container">
+  <div class="page-header">
+    <h2>Case Management</h2>
+  </div>
+
+  <div class="card form-card">
+    <div class="card-header">
+      <h3>Submit New Case</h3>
+    </div>
+    <div class="card-body">
+      <form class="case-form" [formGroup]="caseForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="title">Title<span class="required">*</span></label>
+            <input type="text" id="title" class="form-control" formControlName="title" placeholder="Enter case title">
+            <div *ngIf="showValidationErrors && caseForm.get('title')?.errors?.['required']" class="error-message">
+              Title is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="investigatorId">Investigator ID<span class="required">*</span></label>
+            <input type="text" id="investigatorId" class="form-control" formControlName="investigatorId" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" class="form-control" formControlName="description" rows="4" placeholder="Enter case description"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Submit Case
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card table-card">
+    <div class="card-header">
+      <h3>Case List</h3>
+      <div class="header-actions">
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="Search cases..." [(ngModel)]="searchTerm" (keyup)="applyFilter()">
+          <i class="fas fa-search search-icon"></i>
+        </div>
+        <button class="btn btn-outline" (click)="toggleFilters()">
+          <i class="fas fa-filter"></i> Filter
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div *ngIf="isLoading" class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading cases...</p>
+      </div>
+
+      <div *ngIf="!isLoading" class="table-responsive">
+        <table class="cases-table">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Case Number</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th class="text-center">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let case of filteredCases">
+            <td class="case-id">{{ case.id }}</td>
+            <td class="case-number">{{ case.caseNumber }}</td>
+            <td class="case-title">{{ case.title }}</td>
+            <td><app-status-badge [status]="case.status"></app-status-badge></td>
+
+
+            <td class="case-date">{{ case.createdAt | date }}</td>
+            <td class="actions-cell">
+              <button class="action-btn view-btn" title="View" (click)="viewCase(case.id)">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn edit-btn" title="Edit" (click)="editCase(case.id)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn delete-btn" title="Delete" (click)="confirmDelete(case)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredCases.length === 0">
+            <td colspan="6" class="no-data">
+              <div class="empty-state">
+                <i class="fas fa-folder-open empty-icon"></i>
+                <h4>No cases found</h4>
+                <p>There are no cases to display. Try creating a new case or adjusting your search filters.</p>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="pagination-container">
+        <div class="items-per-page">
+          <span>Items per page:</span>
+          <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+            <option [value]="10">10</option>
+            <option [value]="25">25</option>
+            <option [value]="50">50</option>
+          </select>
+        </div>
+        <div class="pagination-info">
+          {{ paginationStart }} - {{ paginationEnd }} of {{ totalItems }}
+        </div>
+        <div class="pagination-controls">
+          <button class="page-btn" [disabled]="currentPage === 1" (click)="previousPage()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="page-btn" [disabled]="currentPage * pageSize >= totalItems" (click)="nextPage()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

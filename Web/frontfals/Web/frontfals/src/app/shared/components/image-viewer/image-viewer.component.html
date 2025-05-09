@@ -1,0 +1,45 @@
+<div class="image-viewer">
+  <div class="image-container">
+    <img [src]="imageUrl" [alt]="altText" (click)="toggleFullscreen()">
+
+    <div class="image-controls">
+      <button class="btn btn-light btn-sm" (click)="zoomIn()">
+        <i class="fas fa-search-plus"></i>
+      </button>
+      <button class="btn btn-light btn-sm" (click)="zoomOut()">
+        <i class="fas fa-search-minus"></i>
+      </button>
+      <button class="btn btn-light btn-sm" (click)="resetZoom()">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+      <button class="btn btn-light btn-sm" (click)="toggleFullscreen()">
+        <i class="fas fa-expand"></i>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="showCaption && caption" class="image-caption">
+    {{ caption }}
+  </div>
+</div>
+
+<div *ngIf="fullscreen" class="fullscreen-overlay" (click)="closeFullscreen($event)">
+  <div class="fullscreen-container">
+    <img [src]="imageUrl" [alt]="altText" [style.transform]="'scale(' + zoom + ')'">
+
+    <div class="fullscreen-controls">
+      <button class="btn btn-light" (click)="zoomIn()">
+        <i class="fas fa-search-plus"></i>
+      </button>
+      <button class="btn btn-light" (click)="zoomOut()">
+        <i class="fas fa-search-minus"></i>
+      </button>
+      <button class="btn btn-light" (click)="resetZoom()">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+      <button class="btn btn-light" (click)="closeFullscreen()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>

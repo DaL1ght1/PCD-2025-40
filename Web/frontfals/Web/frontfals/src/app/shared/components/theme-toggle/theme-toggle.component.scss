@@ -1,0 +1,47 @@
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: rotate(30deg);
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+
+  i {
+    font-size: 1.2rem;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// Dark theme specific styles
+:host-context(.dark-theme) {
+  .theme-toggle-btn {
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}

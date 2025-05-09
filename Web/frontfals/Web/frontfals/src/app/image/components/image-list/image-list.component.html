@@ -1,0 +1,90 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Image Library</h2>
+        <button class="btn btn-primary" routerLink="/images/upload">
+          <i class="fas fa-cloud-upload-alt me-2"></i> Upload New Image
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Filter Images</h5>
+            <button class="btn btn-sm btn-outline-secondary" (click)="resetFilters()">
+              <i class="fas fa-redo me-1"></i> Reset
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="caseFilter" class="form-label">Case ID</label>
+              <input type="text" id="caseFilter" class="form-control" [(ngModel)]="caseFilter" (keyup)="applyFilters()">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="dateFilter" class="form-label">Date Range</label>
+              <select id="dateFilter" class="form-select" [(ngModel)]="dateFilter" (change)="applyFilters()">
+                <option value="">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="searchFilter" class="form-label">Search</label>
+              <input type="text" id="searchFilter" class="form-control" placeholder="Search by filename..."
+                     [(ngModel)]="searchFilter" (keyup)="applyFilters()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+
+  <div *ngIf="!loading">
+    <div class="row" *ngIf="filteredImages.length > 0">
+      <div class="col-md-4 col-lg-3 mb-4" *ngFor="let image of filteredImages">
+        <div class="card h-100">
+          <div class="card-img-top image-preview">
+            <img [src]="image.url" [alt]="image.filename" (error)="handleImageError($event, image)">
+          </div>
+          <div class="card-body">
+            <h6 class="card-title text-truncate">{{ image.filename }}</h6>
+            <p class="card-text small text-muted">Uploaded: {{ image.uploadDate | date }}</p>
+            <p class="card-text small text-muted" *ngIf="image.caseId">Case ID: {{ image.caseId }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-sm btn-outline-primary" [routerLink]="['/images/detail', image.id]">
+                <i class="fas fa-eye me-1"></i> View
+              </button>
+              <button class="btn btn-sm btn-outline-success" [routerLink]="['/images/analyze', image.id]">
+                <i class="fas fa-microscope me-1"></i> Analyze
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="filteredImages.length === 0">
+      <div class="col-12">
+        <div class="alert alert-info text-center">
+          <i class="fas fa-info-circle me-2"></i>
+          No images found. Upload a new image to get started.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

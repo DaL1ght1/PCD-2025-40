@@ -1,0 +1,13 @@
+<div class="card stat-card" [ngClass]="'border-' + color">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h6 class="card-subtitle mb-2 text-muted">{{ title }}</h6>
+        <h2 class="card-title mb-0">{{ value }}</h2>
+      </div>
+      <div class="icon-container" [ngClass]="'bg-' + color + '-light'">
+        <i [class]="icon" [ngClass]="'text-' + color"></i>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,194 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">Support Center</h1>
+      <p class="page-description">
+        Get help with FIDS products and services
+      </p>
+      <div class="search-container">
+        <div class="search-box">
+          <i class="material-icons">search</i>
+          <input type="text" placeholder="Search for help...">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="support-categories">
+    <div class="container">
+      <h2 class="section-title">How can we help you?</h2>
+      <div class="categories-grid">
+        <a [routerLink]="category.link" class="category-card" *ngFor="let category of supportCategories">
+          <div class="category-icon">
+            <i class="material-icons">{{category.icon}}</i>
+          </div>
+          <h3 class="category-title">{{category.title}}</h3>
+          <p class="category-description">{{category.description}}</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="popular-articles">
+    <div class="container">
+      <h2 class="section-title">Popular Support Articles</h2>
+      <div class="articles-list">
+        <a [routerLink]="article.link" class="article-item" *ngFor="let article of popularArticles">
+          <i class="material-icons">article</i>
+          <span>{{article.title}}</span>
+          <i class="material-icons arrow">arrow_forward</i>
+        </a>
+      </div>
+      <div class="view-all">
+        <a routerLink="/support/articles" class="btn btn-outline">
+          View All Articles
+          <i class="material-icons">arrow_forward</i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2>Can't find what you're looking for?</h2>
+          <p>Our support team is ready to assist you with any questions or issues you may have.</p>
+
+          <div class="contact-methods">
+            <div class="contact-method">
+              <div class="method-icon">
+                <i class="material-icons">email</i>
+              </div>
+              <div class="method-details">
+                <h3>Email Support</h3>
+                <p>For general inquiries and non-urgent issues</p>
+                <a href="mailto:support@fids.io">support&#64;fids.io</a>
+              </div>
+            </div>
+
+            <div class="contact-method">
+              <div class="method-icon">
+                <i class="material-icons">phone</i>
+              </div>
+              <div class="method-details">
+                <h3>Phone Support</h3>
+                <p>Available Monday-Friday, 9am-5pm EST</p>
+                <a href="tel:+18005551234">+1 (800) 555-1234</a>
+              </div>
+            </div>
+
+            <div class="contact-method">
+              <div class="method-icon">
+                <i class="material-icons">chat</i>
+              </div>
+              <div class="method-details">
+                <h3>Live Chat</h3>
+                <p>Get immediate assistance from our team</p>
+                <a href="#" class="chat-link">Start Chat</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form">
+          <h2>Submit a Support Request</h2>
+          <form (ngSubmit)="submitForm()">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" name="name" [(ngModel)]="contactForm.name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" [(ngModel)]="contactForm.email" required>
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" [(ngModel)]="contactForm.subject" required>
+            </div>
+
+            <div class="form-group">
+              <label for="priority">Priority</label>
+              <select id="priority" name="priority" [(ngModel)]="contactForm.priority">
+                <option *ngFor="let priority of priorities" [value]="priority.value">{{priority.label}}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" [(ngModel)]="contactForm.message" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>What image formats does FIDS support?</h3>
+            <i class="material-icons">expand_more</i>
+          </div>
+          <div class="faq-answer">
+            <p>FIDS supports all common image formats including JPEG, PNG, TIFF, BMP, RAW, and many others. For best results, we recommend using uncompressed or minimally compressed formats to preserve image details that are crucial for forensic analysis.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How long does the analysis process take?</h3>
+            <i class="material-icons">expand_more</i>
+          </div>
+          <div class="faq-answer">
+            <p>The AI analysis is typically completed within minutes. Expert review timing depends on case complexity and queue status, but is usually completed within 24-48 hours. Rush processing is available for time-sensitive cases.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Is my data secure during the analysis process?</h3>
+            <i class="material-icons">expand_more</i>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, FIDS employs end-to-end encryption for all uploads and stored data. Our system is compliant with major security standards including GDPR, HIPAA, and SOC 2. All experts sign confidentiality agreements and access is strictly controlled.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Can I export the analysis reports?</h3>
+            <i class="material-icons">expand_more</i>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, all analysis reports can be exported in multiple formats including PDF, DOCX, and HTML. These reports are designed to be court-admissible and include all necessary methodology documentation.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How many users can I add to my account?</h3>
+            <i class="material-icons">expand_more</i>
+          </div>
+          <div class="faq-answer">
+            <p>The number of users depends on your subscription plan. Basic plans include 1 user, Professional plans include up to 5 users, and Enterprise plans offer unlimited users. Additional user licenses can be purchased for any plan.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-all">
+        <a routerLink="/support/faq" class="btn btn-outline">
+          View All FAQs
+          <i class="material-icons">arrow_forward</i>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,11 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: report-service
+  cloud:
+    config:
+      fail-fast: false
+      retry:
+        max-attempts: 20
+        initial-interval: 1500

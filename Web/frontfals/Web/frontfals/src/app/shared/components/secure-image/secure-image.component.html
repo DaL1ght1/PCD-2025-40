@@ -1,0 +1,19 @@
+<div class="secure-image-container" [ngClass]="{'loading': isLoading}">
+  <img
+    *ngIf="safeImageUrl"
+    [src]="safeImageUrl"
+    [alt]="altText"
+    (load)="onImageLoad()"
+    (error)="onImageError()"
+    [ngClass]="{'img-fluid': fluid, 'rounded': rounded}"
+  />
+  <div *ngIf="isLoading" class="loading-indicator">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div *ngIf="hasError" class="error-indicator">
+    <i class="fas fa-exclamation-triangle"></i>
+    <p>Failed to load image</p>
+  </div>
+</div>

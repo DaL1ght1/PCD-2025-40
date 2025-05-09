@@ -393,7 +393,7 @@ export class CreateReportComponent implements OnInit {
       reportType: formValues.reportType,
       generatedBy: formValues.generatedBy,
       templateId: formValues.templateId,
-      imageUrls: formValues.imageUrls, // Include imageUrls in the request
+      imageUrls: formValues.imageUrls,
     };
 
     console.log('Submitting report with data:', reportData); // Debug log

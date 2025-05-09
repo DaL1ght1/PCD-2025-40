@@ -1,0 +1,40 @@
+<div class="container">
+  <h2>Auto-Generated Reports</h2>
+
+  <div *ngIf="loading" class="loading">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error">
+    <div *ngIf="reports.length === 0" class="no-reports">
+      <p>No auto-generated reports found.</p>
+    </div>
+
+    <table *ngIf="reports.length > 0" class="table table-striped">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Case ID</th>
+        <th>Report Type</th>
+        <th>Generated At</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let report of reports">
+        <td>{{ report.title }}</td>
+        <td>{{ report.caseId }}</td>
+        <td>{{ report.reportType }}</td>
+        <td>{{ report.createdAt | date }}</td>
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="viewReport(report.id)">View</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

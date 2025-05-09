@@ -1,0 +1,29 @@
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+}
+
+.not-found-content {
+  text-align: center;
+  max-width: 500px;
+
+  h1 {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  p {
+    color: var(--gray-color);
+    margin-bottom: 30px;
+  }
+}

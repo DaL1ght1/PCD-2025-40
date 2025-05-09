@@ -1,0 +1,18 @@
+<div class="assign-expert-dialog">
+  <h2 mat-dialog-title>Assign Expert to Case: {{ data.caseTitle }}</h2>
+  <mat-dialog-content>
+    <p *ngIf="data.experts.length === 0">No available experts found.</p>
+    <mat-form-field appearance="fill" *ngIf="data.experts.length > 0">
+      <mat-label>Select Expert</mat-label>
+      <mat-select [(ngModel)]="selectedExpertId" name="expert">
+        <mat-option *ngFor="let expert of data.experts" [value]="expert.id">
+          {{ expert.firstname }} {{ expert.lastname }} ({{ expert.email }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancelClick()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onAssignClick()" [disabled]="!selectedExpertId || data.experts.length === 0">Assign</button>
+  </mat-dialog-actions>
+</div>

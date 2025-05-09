@@ -1,0 +1,72 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">Security & Compliance</h1>
+      <p class="page-description">
+        FIDS employs enterprise-grade security measures to protect your sensitive case data
+        and maintain the integrity of your evidence.
+      </p>
+    </div>
+  </header>
+
+  <section class="security-features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of securityFeatures">
+          <div class="feature-icon">
+            <i class="material-icons">{{feature.icon}}</i>
+          </div>
+          <h2 class="feature-title">{{feature.title}}</h2>
+          <p class="feature-description">{{feature.description}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="certifications">
+    <div class="container">
+      <h2 class="section-title">Our Certifications</h2>
+      <p class="section-description">
+        FIDS maintains the highest standards of security and compliance, validated by
+        industry-recognized certifications.
+      </p>
+      <div class="certifications-grid">
+        <div class="certification-card" *ngFor="let cert of certifications">
+          <img [src]="cert.logo" [alt]="cert.name + ' logo'" class="certification-logo">
+          <h3 class="certification-name">{{cert.name}}</h3>
+          <p class="certification-description">{{cert.description}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="security-commitment">
+    <div class="container">
+      <div class="commitment-content">
+        <h2>Our Security Commitment</h2>
+        <p>
+          At FIDS, security isn't just a feature—it's foundational to everything we do. We understand that you're entrusting us with sensitive case materials that could impact legal proceedings and people's lives.
+        </p>
+        <p>
+          Our security team works around the clock to monitor our systems, implement the latest security best practices, and respond immediately to emerging threats. We conduct regular security training for all employees and maintain strict access controls to ensure your data is only accessible to authorized personnel.
+        </p>
+        <p>
+          We're committed to transparency about our security practices and will promptly notify you of any incidents that could affect your data. Our security documentation is available to customers upon request, and we welcome security questions during your evaluation process.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Have security questions?</h2>
+        <p>Our security team is ready to address your specific compliance and security requirements.</p>
+        <div class="cta-buttons">
+          <a routerLink="/contact" class="btn btn-primary">Contact Security Team</a>
+          <a href="assets/documents/FIDS-Security-Whitepaper.pdf" class="btn btn-outline" target="_blank">Download Security Whitepaper</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

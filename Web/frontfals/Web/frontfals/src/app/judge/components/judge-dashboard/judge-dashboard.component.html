@@ -1,0 +1,147 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2>Judge Dashboard</h2>
+      <p class="text-muted">Welcome to the Falsified Image Detection System</p>
+    </div>
+  </div>
+
+  <!-- Add a button to view all cases in the system -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-end">
+        <a routerLink="/judge/all-cases" class="btn btn-primary">
+          <i class="fas fa-list me-2"></i> View All Cases
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-5">
+    <app-loading-spinner message="Loading dashboard data..."></app-loading-spinner>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && !error">
+    <!-- Metrics Cards -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <h5 class="card-title">Total Cases</h5>
+            <h2 class="display-4">{{ metrics.totalCases }}</h2>
+            <p class="card-text">Total cases in the system</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-warning text-dark">
+          <div class="card-body">
+            <h5 class="card-title">Pending Review</h5>
+            <h2 class="display-4">{{ metrics.pendingReview }}</h2>
+            <p class="card-text">Cases awaiting your review</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h5 class="card-title">Completed Cases</h5>
+            <h2 class="display-4">{{ metrics.completedCases }}</h2>
+            <p class="card-text">Cases with your decision</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Cases for Review -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Recent Cases for Review</h5>
+            <a routerLink="/judge/reports" class="btn btn-sm btn-outline-primary">View All</a>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                  <th>Case Number</th>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let case of recentCases">
+                  <td>{{ case.caseNumber }}</td>
+                  <td>{{ case.title }}</td>
+                  <td><app-status-badge [status]="case.status"></app-status-badge></td>
+                  <td>
+                    <a [routerLink]="['/judge/reports', case.id]" class="btn btn-sm btn-primary">
+                      <i class="fas fa-eye me-1"></i> Review
+                    </a>
+                  </td>
+                </tr>
+                <tr *ngIf="recentCases.length === 0">
+                  <td colspan="4" class="text-center py-3">No cases pending review</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Decisions -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Recent Decisions</h5>
+            <a routerLink="/judge/decisions" class="btn btn-sm btn-outline-primary">View All</a>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                  <th>Case Number</th>
+                  <th>Title</th>
+                  <th>Decision</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let decision of metrics.recentDecisions">
+                  <td>{{ decision.caseNumber }}</td>
+                  <td>{{ decision.title }}</td>
+                  <td>
+                      <span class="badge" [ngClass]="getDecisionClass(decision.verdict)">
+                        {{ decision.verdict }}
+                      </span>
+                  </td>
+                  <td>
+                    <a [routerLink]="['/judge/reports', decision.id]" class="btn btn-sm btn-outline-primary">
+                      <i class="fas fa-eye me-1"></i> View
+                    </a>
+                  </td>
+                </tr>
+                <tr *ngIf="metrics.recentDecisions.length === 0">
+                  <td colspan="4" class="text-center py-3">No recent decisions</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

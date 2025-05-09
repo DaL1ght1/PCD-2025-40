@@ -1,0 +1,29 @@
+.dropzone-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  i {
+    font-size: 2rem;
+    color: var(--gray-color);
+    margin-bottom: 10px;
+  }
+
+  span {
+    color: var(--gray-color);
+  }
+}
+
+ngx-dropzone {
+  height: auto;
+  min-height: 150px;
+  background-color: #f8f9fa;
+  border: 2px dashed #ced4da;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #e9ecef;
+  }
+}

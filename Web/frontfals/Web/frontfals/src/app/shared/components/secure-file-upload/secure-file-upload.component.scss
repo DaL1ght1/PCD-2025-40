@@ -1,0 +1,85 @@
+.secure-file-upload {
+  margin-bottom: 20px;
+}
+
+.dropzone {
+  border: 2px dashed #ced4da;
+  border-radius: 5px;
+  padding: 30px;
+  text-align: center;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dropzone.active {
+  border-color: var(--primary-color);
+  background-color: rgba(63, 81, 181, 0.05);
+}
+
+.dropzone.has-error {
+  border-color: #dc3545;
+}
+
+.dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropzone-content i {
+  font-size: 3rem;
+  color: var(--gray-color);
+  margin-bottom: 15px;
+}
+
+.dropzone-content p {
+  color: var(--gray-color);
+  margin-bottom: 15px;
+}
+
+.validation-error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.file-list {
+  margin-top: 20px;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+}
+
+.file-info i {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-right: 15px;
+}
+
+.file-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-name {
+  font-weight: 500;
+}
+
+.file-size {
+  font-size: 0.8rem;
+  color: var(--gray-color);
+}

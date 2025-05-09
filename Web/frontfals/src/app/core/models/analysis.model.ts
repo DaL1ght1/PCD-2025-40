@@ -15,7 +15,6 @@ export interface AnalysisRequest {
   userId: string
 }
 
-// Add the missing AnnotationResponse interface
 export interface AnnotationResponse {
   id: string
   analysisId: string

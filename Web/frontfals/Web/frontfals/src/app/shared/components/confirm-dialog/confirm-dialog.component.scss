@@ -1,0 +1,135 @@
+.confirmation-dialog {
+  width: 100%;
+  max-width: 400px;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+
+    .dialog-title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-color-secondary);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--bg-color-secondary);
+        color: var(--text-color);
+      }
+
+      i {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .dialog-content {
+    padding: 24px;
+
+    .dialog-message {
+      margin: 0 0 16px;
+      color: var(--text-color);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .dialog-detail {
+      padding: 12px;
+      background-color: var(--bg-color-secondary);
+      border-radius: var(--border-radius-sm);
+      color: var(--text-color-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 0 24px 24px;
+
+    button {
+      padding: 10px 16px;
+      border-radius: var(--border-radius-sm);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.btn-cancel {
+        background-color: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-color-secondary);
+
+        &:hover {
+          background-color: var(--bg-color-secondary);
+          color: var(--text-color);
+        }
+      }
+
+      &.btn-confirm {
+        border: none;
+        color: white;
+
+        &.btn-primary {
+          background-color: var(--primary-color);
+
+          &:hover {
+            background-color: var(--primary-dark);
+          }
+        }
+
+        &.btn-danger {
+          background-color: var(--warn-color);
+
+          &:hover {
+            background-color: var(--warn-dark);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark theme specific styles
+:host-context(.dark-theme) {
+  .confirmation-dialog {
+    .dialog-header {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dialog-content {
+      .dialog-detail {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    }
+
+    .dialog-actions {
+      .btn-cancel {
+        border-color: rgba(255, 255, 255, 0.2);
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+}

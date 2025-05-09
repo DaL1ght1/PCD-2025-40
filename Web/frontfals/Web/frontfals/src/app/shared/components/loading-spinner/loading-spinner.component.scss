@@ -1,0 +1,19 @@
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.spinner-border {
+  color: var(--primary-color);
+  width: 3rem;
+  height: 3rem;
+}
+
+.spinner-message {
+  margin-top: 10px;
+  color: var(--gray-color);
+  font-size: 0.9rem;
+}

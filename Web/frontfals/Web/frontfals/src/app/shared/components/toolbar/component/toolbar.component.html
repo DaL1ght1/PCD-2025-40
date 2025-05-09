@@ -1,0 +1,19 @@
+<div class="app-toolbar" [ngClass]="{'dark-theme': isDarkTheme}">
+  <div class="toolbar-left">
+    <h1 class="toolbar-title">{{ title }}</h1>
+  </div>
+
+  <div class="toolbar-right">
+    <div class="toolbar-actions">
+      <button
+        class="toolbar-action-btn notification-btn"
+        matTooltip="Notifications"
+        aria-label="View notifications"
+        (click)="toggleNotifications()"
+      >
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge" *ngIf="unreadNotifications > 0">{{ unreadNotifications }}</span>
+      </button>
+    </div>
+  </div>
+</div>

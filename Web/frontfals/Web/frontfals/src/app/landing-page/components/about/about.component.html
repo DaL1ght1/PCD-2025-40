@@ -1,0 +1,128 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">About FIDS</h1>
+      <p class="page-description">
+        Our mission is to protect the integrity of visual evidence in legal proceedings
+      </p>
+    </div>
+  </header>
+
+  <section class="mission-section">
+    <div class="container">
+      <div class="mission-content">
+        <div class="mission-text">
+          <h2>Our Mission</h2>
+          <p>
+            At FIDS, we are dedicated to combating the growing threat of image manipulation in legal contexts. As digital editing tools become more sophisticated and accessible, the authenticity of photographic evidence is increasingly called into question.
+          </p>
+          <p>
+            Our mission is to provide legal professionals with reliable, scientifically-sound tools to verify the authenticity of digital images, ensuring that justice is served based on factual evidence.
+          </p>
+          <p>
+            We combine cutting-edge artificial intelligence with human expertise to deliver the most accurate image authentication system available, helping courts, law enforcement agencies, and legal teams worldwide distinguish fact from fiction.
+          </p>
+        </div>
+        <div class="mission-stats">
+          <div class="stat-item">
+            <div class="stat-value">92.3%</div>
+            <div class="stat-label">Detection Accuracy</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">5000+</div>
+            <div class="stat-label">Legal Professionals</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">30+</div>
+            <div class="stat-label">Countries</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">250K+</div>
+            <div class="stat-label">Images Analyzed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="history-section">
+    <div class="container">
+      <h2 class="section-title">Our Journey</h2>
+      <div class="timeline">
+        <div class="timeline-item" *ngFor="let milestone of milestones; let i = index">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content" [class.right]="i % 2 !== 0">
+            <div class="timeline-year">{{milestone.year}}</div>
+            <h3 class="timeline-title">{{milestone.title}}</h3>
+            <p class="timeline-description">{{milestone.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <div class="container">
+      <h2 class="section-title">Leadership Team</h2>
+      <p class="section-description">
+        Our team combines expertise in forensic science, artificial intelligence, and legal procedures
+      </p>
+      <div class="team-grid">
+        <div class="team-member" *ngFor="let member of leadershipTeam">
+          <div class="member-image">
+            <img [src]="member.image" [alt]="member.name">
+          </div>
+          <div class="member-info">
+            <h3 class="member-name">{{member.name}}</h3>
+            <div class="member-role">{{member.role}}</div>
+            <p class="member-bio">{{member.bio}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values-section">
+    <div class="container">
+      <h2 class="section-title">Our Core Values</h2>
+      <div class="values-grid">
+        <div class="value-card" *ngFor="let value of values">
+          <div class="value-icon">
+            <i class="material-icons">{{value.icon}}</i>
+          </div>
+          <h3 class="value-title">{{value.title}}</h3>
+          <p class="value-description">{{value.description}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="partners-section">
+    <div class="container">
+      <h2 class="section-title">Our Partners</h2>
+      <p class="section-description">
+        We collaborate with leading organizations in legal and forensic fields
+      </p>
+      <div class="partners-grid">
+        <div class="partner-logo" *ngFor="let partner of partners">
+          <img [src]="partner.logo" [alt]="partner.name">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Join Our Mission</h2>
+        <p>
+          Help us protect the integrity of visual evidence and support the pursuit of justice.
+        </p>
+        <div class="cta-buttons">
+          <a routerLink="/careers" class="btn btn-primary">Join Our Team</a>
+          <a routerLink="/contact" class="btn btn-outline">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
