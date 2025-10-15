@@ -327,7 +327,7 @@ This requires manually setting up all infrastructure components and running each
 
 <p align="center">
   <!-- Place the metrics image in your repo (e.g., assets/fids-model-metrics.png) and keep the path below in sync -->
-  <img src="assets/fids-model-metrics.png" alt="Comparaison des modèles (Accuracy, F1, Précision, Recall)" width="800" />
+  <img src="./fids-model-metrics.png.png" alt="Comparaison des modèles (Accuracy, F1, Précision, Recall)" width="800" />
 </p>
 
 | Modèle            | Accuracy (%) | F1-Score (%) | Précision (%) | Recall (%) |
